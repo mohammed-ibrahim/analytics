@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import au.com.bytecode.opencsv.CSVReader;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +21,16 @@ public class CsvBlockSorter {
             throw new FileNotFoundException(inputFileName.toString());
         }
 
+        List<String[]> buffer = new ArrayList<String[]>();
+        List<Object> columnToSort = new ArrayList<Object>();
+
         try (CSVReader reader = new CSVReader(new FileReader(inputFile.toFile()))) {
             Integer columnIndex = getColumnIndex(reader, csvSortSettings);
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                buffer.add(line);
+                columnToSort.add(line[columnIndex]);
+            }
         } catch (Exception e) {
 
             e.printStackTrace();
