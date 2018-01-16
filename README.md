@@ -5,6 +5,9 @@ Large data processing
 `python generate_csv.py test_generated.csv 5 100`
 Above command generates file output.csv with 5 columns and which would size near to 100mb
 
+# Build the jar
+`gradle shadowJar`
+
 # Sort a csv file ~500Mb
 `java -cp build/libs/csort.jar org.tools.csv.CsvBlockSorter <input_csv_file_name> <output_csv_file_name> col1,col2,col3`
 
