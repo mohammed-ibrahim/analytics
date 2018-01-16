@@ -26,5 +26,5 @@ above command sorts the csv test_generated.csv on column 1,3 and stores the resu
 
 above command sorts the csv test_generated.csv on column 0 (Note: 0th column is the first column) and stores the result in sorted.csv
 
-# Sort a file large that 500mb
+# Sort a file larger than 500mb (upto: 500gb or even ~1tb)
 .. Pending ..
