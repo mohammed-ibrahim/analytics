@@ -6,11 +6,11 @@ import java.io.FileWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.tools.csv.comparator.CsvComparator;
+import org.tools.csv.utils.Timer;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -25,6 +25,9 @@ public class CsvBlockSorter {
         if (!inputFile.toFile().exists()) {
             throw new FileNotFoundException(inputFileName.toString());
         }
+        Timer timer = new Timer();
+        String status = "Failure";
+        Double fileSize = new Double(inputFile.toFile().length())/1000000D;
 
         List<String[]> buffer = new ArrayList<String[]>();
 
@@ -41,11 +44,15 @@ public class CsvBlockSorter {
             Collections.sort(buffer, new CsvComparator(csvSortSettings.getSortColumnOrder()));
             writer.writeNext(header);
             writer.writeAll(buffer);
+            status = "Success";
+
         } catch (Exception e) {
 
             e.printStackTrace();
             return;
         }
+
+        log.info("Status: {}, Time-taken: {}, file-size: {} mb", status, timer.end().toString(), fileSize);
     }
 
     public static void main(String[] args) throws Exception {
@@ -65,39 +72,4 @@ public class CsvBlockSorter {
 
         csvBlockSorter.sort(args[0], args[1], csvSortSettings);
     }
-
-    /*
-    private int getColumnIndex(CSVReader reader, CsvSortSettings csvSortSettings) throws Exception {
-        Integer index = null;
-
-        if (csvSortSettings.getSortColumnOn().equals(SortColumnOn.COL_INDEX)) {
-
-            index = csvSortSettings.getSortColumnIndex();
-        } else if (csvSortSettings.getSortColumnOn().equals(SortColumnOn.COL_NAME)) {
-
-            if (csvSortSettings.getSortColumnName() == null) {
-                throw new RuntimeException("Sort column name not provided.");
-            }
-
-            if (!csvSortSettings.getHasColumnNames()) {
-                throw new RuntimeException("Settings: hasColumnNames is active and csv doesn't have column names");
-            }
-
-            String [] line = reader.readNext();
-
-            if (line == null) {
-                throw new RuntimeException("Csv is empty!!");
-            }
-
-            index = Arrays.asList(line).indexOf(csvSortSettings.getSortColumnName());
-
-            if (index < 0) {
-                throw new RuntimeException("The column: " + csvSortSettings.getSortColumnName() + " not found in csv:");
-            }
-        }
-
-        return index;
-    }
-
-    */
 }
