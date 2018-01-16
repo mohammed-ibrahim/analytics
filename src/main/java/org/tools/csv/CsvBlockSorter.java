@@ -25,6 +25,7 @@ public class CsvBlockSorter {
         if (!inputFile.toFile().exists()) {
             throw new FileNotFoundException(inputFileName.toString());
         }
+
         Timer timer = new Timer();
         String status = "Failure";
         Double fileSize = new Double(inputFile.toFile().length())/1000000D;
@@ -34,6 +35,7 @@ public class CsvBlockSorter {
         try (CSVReader reader = new CSVReader(new FileReader(inputFile.toFile()));
                 CSVWriter writer = new CSVWriter(new FileWriter(outputFileName))) {
 
+            Timer loadtimer = new Timer();
             String[] line = reader.readNext();
             String[] header = line;
 
@@ -41,7 +43,11 @@ public class CsvBlockSorter {
                 buffer.add(line);
             }
 
+            log.info("File-load complete, time-taken: {}", loadtimer.end().toString());
+
+            Timer sortingTimer = new Timer();
             Collections.sort(buffer, new CsvComparator(csvSortSettings.getSortColumnOrder()));
+            log.info("Sorting complete, time-taken: {}", sortingTimer.end().toString());
             writer.writeNext(header);
             writer.writeAll(buffer);
             status = "Success";
