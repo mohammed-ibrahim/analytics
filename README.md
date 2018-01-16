@@ -10,14 +10,17 @@ Above command generates file output.csv with 5 columns and which would size near
 
 ### e.g.
 `java -cp build/libs/csort.jar org.tools.csv.CsvBlockSorter ./test_generated.csv ./sorted.csv 3`
+
 above command sorts the csv test_generated.csv on column 3 and stores the result in sorted.csv
 
 ### e.g.
 `java -cp build/libs/csort.jar org.tools.csv.CsvBlockSorter ./test_generated.csv ./sorted.csv 1,3`
+
 above command sorts the csv test_generated.csv on column 1,3 and stores the result in sorted.csv
 
 ### e.g.
 `java -cp build/libs/csort.jar org.tools.csv.CsvBlockSorter ./test_generated.csv ./sorted.csv 0`
+
 above command sorts the csv test_generated.csv on column 0 (Note: 0th column is the first column) and stores the result in sorted.csv
 
 # Sort a file large that 500mb
