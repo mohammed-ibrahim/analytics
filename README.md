@@ -1,5 +1,8 @@
-# analytics
-Large data processing
+# Csv Analytics
+Process large csv files
+- Sort csv files upto ~1tb on multiple columns. (In-progress)
+- Group csv contents. (pending)
+  - grouping functions max, average, sum
 
 # Generate test csv file
 `python generate_csv.py test_generated.csv 5 100`
