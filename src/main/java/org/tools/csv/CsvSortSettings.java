@@ -1,15 +1,13 @@
 package org.tools.csv;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
 public class CsvSortSettings {
 
-    private SortColumnOn sortColumnOn;
-    
-    private String sortColumnName;
-    
-    private Integer sortColumnIndex;
+    private List<Integer> sortColumnOrder;
     
     private Boolean hasColumnNames;
 }
