@@ -7,18 +7,25 @@ public class StatUtils {
     public static long bytesInMegaByte() {
         return 1000000L;
     }
-    
+
     public static Long getSafeBlockSize() {
 
-        return (100L * bytesInMegaByte());
+        //return (100L * bytesInMegaByte());
+        return (1L * bytesInMegaByte());
     }
-    
+
+    public static Long getSafeBlockSizeInMb() {
+
+        //return (100L * bytesInMegaByte());
+        return (1L);
+    }
+
     public static void assertFileSizeWithinManagableBlockSize(File file) {
         if (file.length() > (120 * bytesInMegaByte())) {
             throw new RuntimeException("Block size greater than managable size.");
         }
     }
-    
+
     public static Double fileSizeInMb(File file) {
         Double fileSize = new Double(file.length())/new Double(bytesInMegaByte());
         return fileSize;

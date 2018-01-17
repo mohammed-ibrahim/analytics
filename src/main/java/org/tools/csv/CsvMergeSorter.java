@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.tools.csv.entity.CsvSortSettings;
@@ -12,6 +13,9 @@ import org.tools.csv.utils.Constants;
 import org.tools.csv.utils.StatUtils;
 import org.tools.csv.utils.Utility;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CsvMergeSorter {
 
     public OperationStatus sort(
@@ -42,16 +46,43 @@ public class CsvMergeSorter {
         }
 
         //call splitter
-        Path splitDirectory = Paths.get(fileSortRootDir.toString(), Constants.SPLIT_FILE_DIR_NAME);
-        FileSplitter fileSplitter = new FileSplitter();
-        List<File> files = fileSplitter.splitFile(inputFileName, splitDirectory.toString(), StatUtils.getSafeBlockSize().intValue(), true);
 
+        Path dropDirectory = Paths.get(fileSortRootDir.toString(), Constants.DROP_DIR_NAME);
+
+        if (!dropDirectory.toFile().exists()) {
+            dropDirectory.toFile().mkdirs();
+        }
+
+        log.info("Splitting....");
+        FileSplitter fileSplitter = new FileSplitter();
+        List<File> files = fileSplitter.splitFile(inputFileName, dropDirectory.toString(), StatUtils.getSafeBlockSizeInMb().intValue(), true);
+        log.info("Total files splitted: {}", files.size());
+
+        log.info("Sorting....");
         InitialSorter initialSorter = new InitialSorter();
         List<File> initialSortedFiles = initialSorter.sortIndividualFiles(files, csvSortSettings, deleteSourceFile);
 
+        log.info("Merging....");
         CsvMerger csvMerger = new CsvMerger();
         csvMerger.merge(initialSortedFiles, outputFileName, csvSortSettings, deleteSourceFile);
 
         return OperationStatus.success();
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        if (args.length != 3) {
+            System.out.println("Usage: java -cp jar_file.jar org.tools.csv.CsvMergeSorter <input_csv> <output_csv> sort_col1,sort_col2,sort_col3");
+            System.exit(1);
+        }
+
+        CsvSortSettings csvSortSettings = new CsvSortSettings();
+        csvSortSettings.setSortColumnOrder(new ArrayList<Integer>());
+        for (String columIndex : args[2].split(",")) {
+            csvSortSettings.getSortColumnOrder().add(Integer.parseInt(columIndex));
+        }
+
+        CsvMergeSorter csvMergeSorter = new CsvMergeSorter();
+        csvMergeSorter.sort(args[0], args[1], csvSortSettings, false, null);
     }
 }
