@@ -12,7 +12,7 @@ Above command generates file output.csv with 5 columns and which would size near
 # Build the jar
 `gradle shadowJar`
 
-# Sort a csv file ~500Mb
+# Sort a csv file ~100Mb
 `java -cp build/libs/csort.jar org.tools.csv.CsvBlockSorter <input_csv_file_name> <output_csv_file_name> col1,col2,col3`
 
 ### e.g.
@@ -30,5 +30,5 @@ above command sorts the csv test_generated.csv on column 1,3 and stores the resu
 
 above command sorts the csv test_generated.csv on column 0 (Note: 0th column is the first column) and stores the result in sorted.csv
 
-# Sort a file larger than 500mb (upto: 500gb or even ~1tb)
+# Sort a file larger than 100mb (upto: 500gb or even ~1tb)
 .. Pending ..
