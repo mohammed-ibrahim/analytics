@@ -1,4 +1,4 @@
-package org.tools.csv;
+package org.tools.csv.entity;
 
 public enum SortColumnOn {
 

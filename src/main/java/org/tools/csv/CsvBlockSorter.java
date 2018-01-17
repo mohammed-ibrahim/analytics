@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.tools.csv.comparator.CsvComparator;
+import org.tools.csv.entity.CsvSortSettings;
 import org.tools.csv.entity.OperationStatus;
 import org.tools.csv.utils.StatUtils;
 import org.tools.csv.utils.Timer;

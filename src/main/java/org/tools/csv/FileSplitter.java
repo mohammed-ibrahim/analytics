@@ -15,7 +15,11 @@ import java.util.List;
 
 public class FileSplitter {
 
-    public List<File> splitFile(String inputFileName, String dumpDirectory, int sizeOfFileInMB) throws IOException {
+    public List<File> splitFile(
+            String inputFileName,
+            String dumpDirectory,
+            int sizeOfFileInMB,
+            Boolean ignoreFirstLine /*Usually required for csv*/) throws IOException {
 
         Path inputFile = Paths.get(inputFileName);
 
@@ -34,6 +38,10 @@ public class FileSplitter {
 
             //String name = inputFile.getName();
             String line = br.readLine();
+
+            if (ignoreFirstLine) {
+                line = br.readLine();
+            }
 
             while (line != null) {
                 //File newFile = new File(inputFile.getParent(), name + "." + String.format("%03d", counter++));

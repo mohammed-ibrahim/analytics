@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.tools.csv.entity.CsvSortSettings;
 import org.tools.csv.entity.OperationStatus;
 import org.tools.csv.utils.StatUtils;
 import org.tools.csv.utils.Utility;
