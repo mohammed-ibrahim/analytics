@@ -45,10 +45,13 @@ public class CsvMergeSorter {
         Path splitDirectory = Paths.get(fileSortRootDir.toString(), Constants.SPLIT_FILE_DIR_NAME);
         FileSplitter fileSplitter = new FileSplitter();
         List<File> files = fileSplitter.splitFile(inputFileName, splitDirectory.toString(), StatUtils.getSafeBlockSize().intValue(), true);
-        CsvMerger csvMerger = new CsvMerger();
-        csvMerger.merge(files, outputFileName);
 
-        //call merger
+        InitialSorter initialSorter = new InitialSorter();
+        List<File> initialSortedFiles = initialSorter.sortIndividualFiles(files, csvSortSettings, deleteSourceFile);
+
+        CsvMerger csvMerger = new CsvMerger();
+        csvMerger.merge(initialSortedFiles, outputFileName, csvSortSettings, deleteSourceFile);
+
         return OperationStatus.success();
     }
 }
