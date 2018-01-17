@@ -6,6 +6,7 @@ Process large csv files
 
 # Generate test csv file
 `python generate_csv.py test_generated.csv 5 100`
+
 Above command generates file output.csv with 5 columns and which would size near to 100mb
 
 # Build the jar
