@@ -20,7 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CsvBlockSorter {
 
-    public void sort(String inputFileName, String outputFileName, CsvSortSettings csvSortSettings) throws Exception {
+    public void sort(String inputFileName,
+            String outputFileName,
+            CsvSortSettings csvSortSettings,
+            Boolean deleteSourceFile) throws Exception {
+
         Path inputFile = Paths.get(inputFileName);
 
         //10mb csv file takes ~/350mb ram
@@ -65,6 +69,10 @@ public class CsvBlockSorter {
             return;
         }
 
+        if (deleteSourceFile) {
+            inputFile.toFile().delete();
+        }
+
         log.info("Status: {}, Time-taken: {}, file-size: {} mb", status, timer.end().toString(), fileSize);
     }
 
@@ -83,6 +91,6 @@ public class CsvBlockSorter {
             csvSortSettings.getSortColumnOrder().add(Integer.parseInt(columIndex));
         }
 
-        csvBlockSorter.sort(args[0], args[1], csvSortSettings);
+        csvBlockSorter.sort(args[0], args[1], csvSortSettings, false);
     }
 }
