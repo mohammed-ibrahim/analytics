@@ -1,8 +1,10 @@
 package org.tools.csv;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.tools.csv.entity.CsvSortSettings;
 import org.tools.csv.entity.OperationStatus;
@@ -42,7 +44,9 @@ public class CsvMergeSorter {
         //call splitter
         Path splitDirectory = Paths.get(fileSortRootDir.toString(), Constants.SPLIT_FILE_DIR_NAME);
         FileSplitter fileSplitter = new FileSplitter();
-        fileSplitter.splitFile(inputFileName, splitDirectory.toString(), StatUtils.getSafeBlockSize().intValue(), true);
+        List<File> files = fileSplitter.splitFile(inputFileName, splitDirectory.toString(), StatUtils.getSafeBlockSize().intValue(), true);
+        CsvMerger csvMerger = new CsvMerger();
+        csvMerger.merge(files, outputFileName);
 
         //call merger
         return OperationStatus.success();
