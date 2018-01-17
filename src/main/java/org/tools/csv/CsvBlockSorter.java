@@ -22,6 +22,9 @@ public class CsvBlockSorter {
     public void sort(String inputFileName, String outputFileName, CsvSortSettings csvSortSettings) throws Exception {
         Path inputFile = Paths.get(inputFileName);
 
+        //10mb csv file takes ~/350mb ram
+        //50mb csv file takes ~/870mb ram
+        //100mb csv file takes ~/1050mb ram
         if (!inputFile.toFile().exists()) {
             throw new FileNotFoundException(inputFileName.toString());
         }
@@ -47,6 +50,8 @@ public class CsvBlockSorter {
 
             Timer sortingTimer = new Timer();
             Collections.sort(buffer, new CsvComparator(csvSortSettings.getSortColumnOrder()));
+            //log.info("Sleeping for 1 min");
+            //Thread.currentThread().sleep(60000);
             log.info("Sorting complete, time-taken: {}", sortingTimer.end().toString());
             writer.writeNext(header);
             writer.writeAll(buffer);
