@@ -8,7 +8,7 @@ public class StatUtils {
         return 1000000L;
     }
     
-    public static long getSafeBlockSize() {
+    public static Long getSafeBlockSize() {
 
         return (100L * bytesInMegaByte());
     }

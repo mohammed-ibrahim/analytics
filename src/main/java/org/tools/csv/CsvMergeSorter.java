@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 
 import org.tools.csv.entity.CsvSortSettings;
 import org.tools.csv.entity.OperationStatus;
+import org.tools.csv.utils.Constants;
 import org.tools.csv.utils.StatUtils;
 import org.tools.csv.utils.Utility;
 
@@ -39,6 +40,10 @@ public class CsvMergeSorter {
         }
 
         //call splitter
+        Path splitDirectory = Paths.get(fileSortRootDir.toString(), Constants.SPLIT_FILE_DIR_NAME);
+        FileSplitter fileSplitter = new FileSplitter();
+        fileSplitter.splitFile(inputFileName, splitDirectory.toString(), StatUtils.getSafeBlockSize().intValue(), true);
+
         //call merger
         return OperationStatus.success();
     }
