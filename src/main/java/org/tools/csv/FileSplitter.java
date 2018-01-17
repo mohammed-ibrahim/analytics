@@ -8,26 +8,36 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileSplitter {
 
-    public List<File> splitFile(File inputFile, int sizeOfFileInMB) throws IOException {
-        
+    public List<File> splitFile(String inputFileName, String dumpDirectory, int sizeOfFileInMB) throws IOException {
+
+        Path inputFile = Paths.get(inputFileName);
+
+        if ((!Paths.get(dumpDirectory).toFile().exists())
+                || (!Paths.get(dumpDirectory).toFile().isDirectory())) {
+
+            throw new RuntimeException("Invalid dump directory: " + dumpDirectory);
+        }
+
         int counter = 1;
         List<File> files = new ArrayList<File>();
         int sizeOfChunk = 1024 * 1024 * sizeOfFileInMB;
         String eof = System.lineSeparator();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(inputFile.toFile()))) {
 
-            String name = inputFile.getName();
+            //String name = inputFile.getName();
             String line = br.readLine();
 
             while (line != null) {
-                File newFile = new File(inputFile.getParent(), name + "." + String.format("%03d", counter++));
+                //File newFile = new File(inputFile.getParent(), name + "." + String.format("%03d", counter++));
+                File newFile = Paths.get(dumpDirectory, "part-" + String.format("%07d", counter++)).toFile();
 
                 try (OutputStream out = new BufferedOutputStream(new FileOutputStream(newFile))) {
 
@@ -56,12 +66,12 @@ public class FileSplitter {
     
     public static void main(String[] args) throws Exception {
         
-        if (args.length != 2) {
-            System.out.println("Usage: java -cp jar_file.jar org.tools.csv.FileSplitter <input_file> size_in_mb");
+        if (args.length != 3) {
+            System.out.println("Usage: java -cp jar_file.jar org.tools.csv.FileSplitter <input_file> <dump_directory> size_in_mb");
             System.exit(1);
         }
         
         FileSplitter fileSplitter = new FileSplitter();
-        fileSplitter.splitFile(Paths.get(args[0]).toFile(), Integer.parseInt(args[1]));
+        fileSplitter.splitFile(args[0], args[1], Integer.parseInt(args[2]));
     }
 }

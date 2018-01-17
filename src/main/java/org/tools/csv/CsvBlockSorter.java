@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.tools.csv.comparator.CsvComparator;
+import org.tools.csv.entity.OperationStatus;
 import org.tools.csv.utils.StatUtils;
 import org.tools.csv.utils.Timer;
 
@@ -20,7 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CsvBlockSorter {
 
-    public void sort(String inputFileName,
+    public OperationStatus sort(
+            String inputFileName,
             String outputFileName,
             CsvSortSettings csvSortSettings,
             Boolean deleteSourceFile) throws Exception {
@@ -66,7 +68,7 @@ public class CsvBlockSorter {
         } catch (Exception e) {
 
             e.printStackTrace();
-            return;
+            return OperationStatus.failure();
         }
 
         if (deleteSourceFile) {
@@ -74,6 +76,8 @@ public class CsvBlockSorter {
         }
 
         log.info("Status: {}, Time-taken: {}, file-size: {} mb", status, timer.end().toString(), fileSize);
+
+        return OperationStatus.success();
     }
 
     public static void main(String[] args) throws Exception {
