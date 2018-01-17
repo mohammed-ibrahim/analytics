@@ -10,13 +10,12 @@ public class StatUtils {
 
     public static Long getSafeBlockSize() {
 
-        //return (100L * bytesInMegaByte());
-        return (1L * bytesInMegaByte());
+        return (getSafeBlockSizeInMb() * bytesInMegaByte());
     }
 
     public static Long getSafeBlockSizeInMb() {
 
-        //return (100L * bytesInMegaByte());
+        //return (100L);
         return (1L);
     }
 
