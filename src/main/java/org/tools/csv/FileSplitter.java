@@ -80,6 +80,6 @@ public class FileSplitter {
         }
         
         FileSplitter fileSplitter = new FileSplitter();
-        fileSplitter.splitFile(args[0], args[1], Integer.parseInt(args[2]));
+        fileSplitter.splitFile(args[0], args[1], Integer.parseInt(args[2]), false);
     }
 }
