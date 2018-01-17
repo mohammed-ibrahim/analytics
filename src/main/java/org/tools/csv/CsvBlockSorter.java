@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.tools.csv.comparator.CsvComparator;
+import org.tools.csv.utils.StatUtils;
 import org.tools.csv.utils.Timer;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -31,7 +32,8 @@ public class CsvBlockSorter {
 
         Timer timer = new Timer();
         String status = "Failure";
-        Double fileSize = new Double(inputFile.toFile().length())/1000000D;
+        Double fileSize = StatUtils.fileSizeInMb(inputFile.toFile());
+        StatUtils.assertFileSizeWithinManagableBlockSize(inputFile.toFile());
 
         List<String[]> buffer = new ArrayList<String[]>();
 
