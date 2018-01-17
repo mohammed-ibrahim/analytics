@@ -3,6 +3,7 @@ package org.tools.csv;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +27,8 @@ public class InitialSorter {
 
     private Iterator<File> iterator;
 
+    private List<File> sortedFiles;
+
     public List<File> sortIndividualFiles(
             List<File> files,
             CsvSortSettings csvSortSettings,
@@ -33,6 +36,7 @@ public class InitialSorter {
 
         this.hasFailed = false;
         this.iterator = files.iterator();
+        this.sortedFiles = new ArrayList<File>();
 
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
 
@@ -43,7 +47,7 @@ public class InitialSorter {
         executorService.shutdown();
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
 
-        return null;
+        return this.sortedFiles;
     }
 
     synchronized public void failed() {
@@ -59,6 +63,10 @@ public class InitialSorter {
         Integer returnIndex = this.index;
         this.index++;
         return Arrays.asList(this.iterator.next(), returnIndex);
+    }
+
+    synchronized void submitFile(File file) {
+        this.sortedFiles.add(file);
     }
 
     @AllArgsConstructor
@@ -77,7 +85,8 @@ public class InitialSorter {
                 while ((nextFileDetails = getNextFile()) != null) {
                     File fileToBlockSort = (File)nextFileDetails.get(0);
                     Integer index = (Integer)nextFileDetails.get(1);
-                    safeRun(fileToBlockSort, index);
+                    File sortedFile = safeRun(fileToBlockSort, index);
+                    submitFile(sortedFile);
                 }
             } catch (Exception e) {
 
@@ -86,7 +95,7 @@ public class InitialSorter {
             }
         }
 
-        public void safeRun(File fileToBlockSort, Integer index) throws Exception {
+        public File safeRun(File fileToBlockSort, Integer index) throws Exception {
             Path sourcePath = fileToBlockSort.toPath();
             Path destinationPath = Paths.get(sourcePath.getParent().toString(), "initial-sorted-" + String.format("%07d", index));
 
@@ -97,6 +106,8 @@ public class InitialSorter {
                     destinationPath.toString(),
                     this.csvSortSettings,
                     this.deleteSourceFile);
+
+            return destinationPath.toFile();
         }
     }
 }

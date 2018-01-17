@@ -8,6 +8,10 @@ import org.tools.csv.entity.OperationStatus;
 
 public class CsvMerger {
 
+    private static final int NUM_THREADS = 2;
+
+    private Boolean hasFailed;
+
     public OperationStatus merge(
             List<File> files,
             String outputFileName,

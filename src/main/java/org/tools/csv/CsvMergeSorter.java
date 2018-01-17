@@ -61,6 +61,7 @@ public class CsvMergeSorter {
         log.info("Sorting....");
         InitialSorter initialSorter = new InitialSorter();
         List<File> initialSortedFiles = initialSorter.sortIndividualFiles(files, csvSortSettings, deleteSourceFile);
+        log.info("Total files sorted: {}", initialSortedFiles.size());
 
         log.info("Merging....");
         CsvMerger csvMerger = new CsvMerger();
