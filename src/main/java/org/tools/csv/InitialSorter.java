@@ -101,10 +101,15 @@ public class InitialSorter {
 
             log.info("Sorting the file: {} into: {}", fileToBlockSort.toString(), destinationPath.toString());
 
+            CsvSortSettings auxSettings = new CsvSortSettings();
+            auxSettings.setSortColumnOrder(this.csvSortSettings.getSortColumnOrder());
+            //Initial sorter doesn't have any column names.
+            auxSettings.setHasColumnNames(false);
+
             CsvBlockSorter csvBlockSorter = new CsvBlockSorter();
             csvBlockSorter.sort(sourcePath.toString(),
                     destinationPath.toString(),
-                    this.csvSortSettings,
+                    auxSettings,
                     this.deleteSourceFile);
 
             return destinationPath.toFile();

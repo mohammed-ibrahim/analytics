@@ -48,7 +48,8 @@ public class CsvBlockSorter {
                 CSVWriter writer = new CSVWriter(new FileWriter(outputFileName))) {
 
             Timer loadtimer = new Timer();
-            String[] line = reader.readNext();
+            //Just to ensure that column-names are ommited for sorting.
+            String[] line = (csvSortSettings.getHasColumnNames()) ? reader.readNext() : null;
             String[] header = line;
 
             while ((line = reader.readNext()) != null) {

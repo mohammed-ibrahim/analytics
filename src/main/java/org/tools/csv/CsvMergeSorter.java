@@ -53,9 +53,10 @@ public class CsvMergeSorter {
             dropDirectory.toFile().mkdirs();
         }
 
+        String[] columnNames = Utility.getColumnNamesOfCsv(inputFile, csvSortSettings);
         log.info("Splitting....");
         FileSplitter fileSplitter = new FileSplitter();
-        List<File> files = fileSplitter.splitFile(inputFileName, dropDirectory.toString(), StatUtils.getSafeBlockSizeInMb().intValue(), true);
+        List<File> files = fileSplitter.splitFile(inputFileName, dropDirectory.toString(), StatUtils.getManagableSizeInMb().intValue(), true);
         log.info("Total files splitted: {}", files.size());
 
         log.info("Sorting....");
@@ -65,7 +66,7 @@ public class CsvMergeSorter {
 
         log.info("Merging....");
         CsvMerger csvMerger = new CsvMerger();
-        csvMerger.merge(initialSortedFiles, outputFileName, csvSortSettings, deleteSourceFile);
+        csvMerger.merge(initialSortedFiles, outputFileName, columnNames, csvSortSettings, deleteSourceFile);
 
         return OperationStatus.success();
     }
@@ -79,6 +80,7 @@ public class CsvMergeSorter {
 
         CsvSortSettings csvSortSettings = new CsvSortSettings();
         csvSortSettings.setSortColumnOrder(new ArrayList<Integer>());
+        csvSortSettings.setHasColumnNames(true);
         for (String columIndex : args[2].split(",")) {
             csvSortSettings.getSortColumnOrder().add(Integer.parseInt(columIndex));
         }

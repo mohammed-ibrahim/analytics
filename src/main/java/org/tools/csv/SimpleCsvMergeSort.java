@@ -11,10 +11,12 @@ import org.tools.csv.entity.OperationStatus;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SimpleCsvMergeSort {
 
-    public OperationStatus mergeCsvFiles(
+    public OperationStatus mergeSortCsvFiles(
             String filea,
             String fileb,
             String filec,
@@ -25,6 +27,7 @@ public class SimpleCsvMergeSort {
         Path pathb = Paths.get(fileb);
         Path pathc = Paths.get(filec);
 
+        log.info("Merging a: {}, b: {} into c: {}", filea, fileb, filec);
         try (CSVReader readera = new CSVReader(new FileReader(patha.toFile()));
                 CSVReader readerb = new CSVReader(new FileReader(pathb.toFile()));
                 CSVWriter writerc = new CSVWriter(new FileWriter(pathc.toFile()))) {
