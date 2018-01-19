@@ -29,7 +29,7 @@ public class CsvMerger {
 
     public OperationStatus merge(
             List<File> files,
-            String outputFileName,
+            Path outputFilePath,
             String[] columnNames,
             CsvSortSettings csvSortSettings,
             Boolean deleteSourceFile) throws Exception {
@@ -47,20 +47,20 @@ public class CsvMerger {
             return OperationStatus.failure();
         }
 
-        Path outputPath = Paths.get(outputFileName);
-        if (outputPath.toFile().exists()) {
-            outputPath.toFile().delete();
+        //Path outputPath = Paths.get(outputFileName);
+        if (outputFilePath.toFile().exists()) {
+            outputFilePath.toFile().delete();
         }
 
         File sortedFile = filesToMergeSort.get(0);
         if (columnNames != null) {
-            CSVWriter writer = new CSVWriter(new FileWriter(outputPath.toFile()));
+            CSVWriter writer = new CSVWriter(new FileWriter(outputFilePath.toFile()));
             writer.writeNext(columnNames);
             writer.close();
-            new FileAppender().append(sortedFile.toPath(), outputPath);
+            new FileAppender().append(sortedFile.toPath(), outputFilePath);
         } else {
 
-            sortedFile.renameTo(new File(outputFileName));
+            sortedFile.renameTo(outputFilePath.toFile());
         }
 
         return OperationStatus.success();

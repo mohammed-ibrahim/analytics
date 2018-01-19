@@ -19,22 +19,20 @@ import lombok.extern.slf4j.Slf4j;
 public class CsvMergeSorter {
 
     public OperationStatus sort(
-            String inputFileName,
-            String outputFileName,
+            Path inputFilePath,
+            Path outputFilePath,
             CsvSortSettings csvSortSettings,
             Boolean deleteSourceFile,
             String fileSortDirectory) throws Exception {
 
-        Path inputFile = Paths.get(inputFileName);
-
-        if (!inputFile.toFile().exists()) {
-            throw new FileNotFoundException(inputFileName.toString());
+        if (!inputFilePath.toFile().exists()) {
+            throw new FileNotFoundException(inputFilePath.toString());
         }
 
-        if (inputFile.toFile().length() <= StatUtils.getSafeBlockSize()) {
+        if (inputFilePath.toFile().length() <= StatUtils.getSafeBlockSize()) {
 
             CsvBlockSorter csvBlockSorter = new CsvBlockSorter();
-            return csvBlockSorter.sort(inputFileName, outputFileName, csvSortSettings, deleteSourceFile);
+            return csvBlockSorter.sort(inputFilePath, outputFilePath, csvSortSettings, deleteSourceFile);
         }
 
         String tempDirectory = (fileSortDirectory == null) ? System.getProperty("java.io.tmpdir") : fileSortDirectory;
@@ -53,10 +51,10 @@ public class CsvMergeSorter {
             dropDirectory.toFile().mkdirs();
         }
 
-        String[] columnNames = Utility.getColumnNamesOfCsv(inputFile, csvSortSettings);
+        String[] columnNames = Utility.getColumnNamesOfCsv(inputFilePath, csvSortSettings);
         log.info("Splitting....");
         FileSplitter fileSplitter = new FileSplitter();
-        List<File> files = fileSplitter.splitFile(inputFileName, dropDirectory.toString(), StatUtils.getManagableSizeInMb().intValue(), true);
+        List<File> files = fileSplitter.splitFile(inputFilePath, dropDirectory, StatUtils.getManagableSizeInMb().intValue(), true);
         log.info("Total files splitted: {}", files.size());
 
         log.info("Sorting....");
@@ -66,7 +64,7 @@ public class CsvMergeSorter {
 
         log.info("Merging....");
         CsvMerger csvMerger = new CsvMerger();
-        csvMerger.merge(initialSortedFiles, outputFileName, columnNames, csvSortSettings, deleteSourceFile);
+        csvMerger.merge(initialSortedFiles, outputFilePath, columnNames, csvSortSettings, deleteSourceFile);
 
         return OperationStatus.success();
     }
@@ -86,6 +84,6 @@ public class CsvMergeSorter {
         }
 
         CsvMergeSorter csvMergeSorter = new CsvMergeSorter();
-        csvMergeSorter.sort(args[0], args[1], csvSortSettings, false, null);
+        csvMergeSorter.sort(Paths.get(args[0]), Paths.get(args[1]), csvSortSettings, false, null);
     }
 }

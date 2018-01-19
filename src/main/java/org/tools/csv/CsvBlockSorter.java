@@ -23,29 +23,27 @@ import lombok.extern.slf4j.Slf4j;
 public class CsvBlockSorter {
 
     public OperationStatus sort(
-            String inputFileName,
-            String outputFileName,
+            Path inputFilePath,
+            Path outputFilePath,
             CsvSortSettings csvSortSettings,
             Boolean deleteSourceFile) throws Exception {
-
-        Path inputFile = Paths.get(inputFileName);
 
         //10mb csv file takes ~/350mb ram
         //50mb csv file takes ~/870mb ram
         //100mb csv file takes ~/1050mb ram
-        if (!inputFile.toFile().exists()) {
-            throw new FileNotFoundException(inputFileName.toString());
+        if (!inputFilePath.toFile().exists()) {
+            throw new FileNotFoundException(inputFilePath.toString());
         }
 
         Timer timer = new Timer();
         String status = "Failure";
-        Double fileSize = StatUtils.fileSizeInMb(inputFile.toFile());
-        StatUtils.assertFileSizeWithinManagableBlockSize(inputFile.toFile());
+        Double fileSize = StatUtils.fileSizeInMb(inputFilePath.toFile());
+        StatUtils.assertFileSizeWithinManagableBlockSize(inputFilePath.toFile());
 
         List<String[]> buffer = new ArrayList<String[]>();
 
-        try (CSVReader reader = new CSVReader(new FileReader(inputFile.toFile()));
-                CSVWriter writer = new CSVWriter(new FileWriter(outputFileName))) {
+        try (CSVReader reader = new CSVReader(new FileReader(inputFilePath.toFile()));
+                CSVWriter writer = new CSVWriter(new FileWriter(outputFilePath.toFile()))) {
 
             Timer loadtimer = new Timer();
             //Just to ensure that column-names are ommited for sorting.
@@ -74,7 +72,7 @@ public class CsvBlockSorter {
         }
 
         if (deleteSourceFile) {
-            inputFile.toFile().delete();
+            inputFilePath.toFile().delete();
         }
 
         log.info("Status: {}, Time-taken: {}, file-size: {} mb", status, timer.end().toString(), fileSize);
@@ -97,6 +95,6 @@ public class CsvBlockSorter {
             csvSortSettings.getSortColumnOrder().add(Integer.parseInt(columIndex));
         }
 
-        csvBlockSorter.sort(args[0], args[1], csvSortSettings, false);
+        csvBlockSorter.sort(Paths.get(args[0]), Paths.get(args[1]), csvSortSettings, false);
     }
 }

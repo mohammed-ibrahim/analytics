@@ -107,8 +107,8 @@ public class InitialSorter {
             auxSettings.setHasColumnNames(false);
 
             CsvBlockSorter csvBlockSorter = new CsvBlockSorter();
-            csvBlockSorter.sort(sourcePath.toString(),
-                    destinationPath.toString(),
+            csvBlockSorter.sort(sourcePath,
+                    destinationPath,
                     auxSettings,
                     this.deleteSourceFile);
 

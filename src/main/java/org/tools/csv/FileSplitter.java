@@ -16,17 +16,15 @@ import java.util.List;
 public class FileSplitter {
 
     public List<File> splitFile(
-            String inputFileName,
-            String dumpDirectory,
+            Path inputFilePath,
+            Path dumpDirectoryPath,
             int sizeOfFileInMB,
             Boolean ignoreFirstLine /*Usually required for csv*/) throws IOException {
 
-        Path inputFile = Paths.get(inputFileName);
+        if ((!dumpDirectoryPath.toFile().exists())
+                || (!dumpDirectoryPath.toFile().isDirectory())) {
 
-        if ((!Paths.get(dumpDirectory).toFile().exists())
-                || (!Paths.get(dumpDirectory).toFile().isDirectory())) {
-
-            throw new RuntimeException("Invalid dump directory: " + dumpDirectory);
+            throw new RuntimeException("Invalid dump directory: " + dumpDirectoryPath.toString());
         }
 
         int counter = 1;
@@ -34,7 +32,7 @@ public class FileSplitter {
         int sizeOfChunk = 1024 * 1024 * sizeOfFileInMB;
         String eof = System.lineSeparator();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(inputFile.toFile()))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(inputFilePath.toFile()))) {
 
             //String name = inputFile.getName();
             String line = br.readLine();
@@ -45,7 +43,7 @@ public class FileSplitter {
 
             while (line != null) {
                 //File newFile = new File(inputFile.getParent(), name + "." + String.format("%03d", counter++));
-                File newFile = Paths.get(dumpDirectory, "part-" + String.format("%07d", counter++)).toFile();
+                File newFile = Paths.get(dumpDirectoryPath.toString(), "part-" + String.format("%07d", counter++)).toFile();
 
                 try (OutputStream out = new BufferedOutputStream(new FileOutputStream(newFile))) {
 
@@ -80,6 +78,6 @@ public class FileSplitter {
         }
         
         FileSplitter fileSplitter = new FileSplitter();
-        fileSplitter.splitFile(args[0], args[1], Integer.parseInt(args[2]), false);
+        fileSplitter.splitFile(Paths.get(args[0]), Paths.get(args[1]), Integer.parseInt(args[2]), false);
     }
 }
