@@ -13,9 +13,9 @@ import org.tools.csv.utils.Constants;
 import org.tools.csv.utils.FileSplitter;
 import org.tools.csv.utils.StatUtils;
 import org.tools.csv.utils.Utility;
+import org.tools.csv.validation.CsvSortCliHandler;
 
 import lombok.extern.slf4j.Slf4j;
-import validation.CsvSortCliHandler;
 
 @Slf4j
 public class CsvMergeSorter {

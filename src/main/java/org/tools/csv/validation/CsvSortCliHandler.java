@@ -1,4 +1,4 @@
-package validation;
+package org.tools.csv.validation;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,6 +9,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.tools.csv.entity.CsvSortSettings;
+import org.tools.csv.utils.Utility;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -89,12 +90,14 @@ public class CsvSortCliHandler {
         }
 
         if (cms.isPresent(cli)) {
-            //TODO: parse column names
-            //this.outputFilePath = Paths.get(cms.getOptionValue(cli));
+            String csvCols = cms.getOptionValue(cli);
+            this.csvSortSettings = Utility.getCsvSortSettings(inputFilePath, csvCols);
         }
 
         if (sf.isPresent(cli)) {
             this.deleteSourceFile = false;
+        } else {
+            this.deleteSourceFile = true;
         }
 
         if (dd.isPresent(cli)) {
