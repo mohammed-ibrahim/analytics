@@ -15,6 +15,7 @@ import org.tools.csv.utils.StatUtils;
 import org.tools.csv.utils.Utility;
 
 import lombok.extern.slf4j.Slf4j;
+import validation.CsvSortCliHandler;
 
 @Slf4j
 public class CsvMergeSorter {
@@ -24,7 +25,7 @@ public class CsvMergeSorter {
             Path outputFilePath,
             CsvSortSettings csvSortSettings,
             Boolean deleteSourceFile,
-            String fileSortDirectory) throws Exception {
+            Path tempDumpDirectory) throws Exception {
 
         if (!inputFilePath.toFile().exists()) {
             throw new FileNotFoundException(inputFilePath.toString());
@@ -36,7 +37,7 @@ public class CsvMergeSorter {
             return csvBlockSorter.sort(inputFilePath, outputFilePath, csvSortSettings, deleteSourceFile);
         }
 
-        String tempDirectory = (fileSortDirectory == null) ? System.getProperty("java.io.tmpdir") : fileSortDirectory;
+        String tempDirectory = (tempDumpDirectory == null) ? System.getProperty("java.io.tmpdir") : tempDumpDirectory.toString();
         String tag = Utility.generateTag();
         Path fileSortRootDir = Paths.get(tempDirectory, tag);
 
@@ -72,19 +73,14 @@ public class CsvMergeSorter {
 
     public static void main(String[] args) throws Exception {
 
-        if (args.length != 3) {
-            System.out.println("Usage: java -cp jar_file.jar org.tools.csv.CsvMergeSorter <input_csv> <output_csv> sort_col1,sort_col2,sort_col3");
-            System.exit(1);
-        }
-
-        CsvSortSettings csvSortSettings = new CsvSortSettings();
-        csvSortSettings.setSortColumnOrder(new ArrayList<Integer>());
-        csvSortSettings.setHasColumnNames(true);
-        for (String columIndex : args[2].split(",")) {
-            csvSortSettings.getSortColumnOrder().add(Integer.parseInt(columIndex));
-        }
+        CsvSortCliHandler csvSortCliHandler = new CsvSortCliHandler();
+        csvSortCliHandler.validate(args);
 
         CsvMergeSorter csvMergeSorter = new CsvMergeSorter();
-        csvMergeSorter.sort(Paths.get(args[0]), Paths.get(args[1]), csvSortSettings, false, null);
+        csvMergeSorter.sort(csvSortCliHandler.getInputFilePath(),
+                csvSortCliHandler.getOutputFilePath(),
+                csvSortCliHandler.getCsvSortSettings(),
+                csvSortCliHandler.getDeleteSourceFile(),
+                csvSortCliHandler.getTempDumpDirectory());
     }
 }
