@@ -4,8 +4,6 @@ import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.Random;
 
-import org.tools.csv.entity.CsvSortSettings;
-
 import au.com.bytecode.opencsv.CSVReader;
 
 public class Utility {
@@ -19,11 +17,7 @@ public class Utility {
             + String.valueOf(System.currentTimeMillis());
     }
 
-    public static String[] getColumnNamesOfCsv(Path path, CsvSortSettings csvSortSettings) {
-
-        if (!csvSortSettings.getHasColumnNames()) {
-            return null;
-        }
+    public static String[] getColumnNamesOfCsv(Path path) {
 
         String[] columnNames = null;
 
@@ -36,5 +30,9 @@ public class Utility {
         }
 
         return columnNames;
+    }
+
+    public static boolean isNumeric(String s) {
+        return s != null && s.matches("[-+]?\\d*\\.?\\d+");
     }
 }

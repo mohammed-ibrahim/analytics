@@ -46,9 +46,15 @@ public class CsvBlockSorter {
                 CSVWriter writer = new CSVWriter(new FileWriter(outputFilePath.toFile()))) {
 
             Timer loadtimer = new Timer();
+            String[] line = null;
+            String[] header = null;
+
             //Just to ensure that column-names are ommited for sorting.
-            String[] line = (csvSortSettings.getHasColumnNames()) ? reader.readNext() : null;
-            String[] header = line;
+            if (csvSortSettings.getHasColumnNames()) {
+
+                //Preserve the headers.
+                header = reader.readNext();
+            }
 
             while ((line = reader.readNext()) != null) {
                 buffer.add(line);
@@ -58,10 +64,13 @@ public class CsvBlockSorter {
 
             Timer sortingTimer = new Timer();
             Collections.sort(buffer, new CsvComparator(csvSortSettings.getSortColumnOrder()));
-            //log.info("Sleeping for 1 min");
-            //Thread.currentThread().sleep(60000);
             log.info("Sorting complete, time-taken: {}", sortingTimer.end().toString());
-            writer.writeNext(header);
+
+            //Restore the headers after sorting.
+            if (header != null) {
+                writer.writeNext(header);
+            }
+
             writer.writeAll(buffer);
             status = "Success";
 
