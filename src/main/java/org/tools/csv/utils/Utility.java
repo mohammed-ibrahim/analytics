@@ -2,12 +2,7 @@ package org.tools.csv.utils;
 
 import java.io.FileReader;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-
-import org.tools.csv.entity.CsvSortSettings;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -22,11 +17,7 @@ public class Utility {
             + String.valueOf(System.currentTimeMillis());
     }
 
-    public static String[] getColumnNamesOfCsv(Path path, CsvSortSettings csvSortSettings) {
-
-        if (!csvSortSettings.getHasColumnNames()) {
-            return null;
-        }
+    public static String[] getColumnNamesOfCsv(Path path) {
 
         String[] columnNames = null;
 
@@ -39,53 +30,6 @@ public class Utility {
         }
 
         return columnNames;
-    }
-
-    public static CsvSortSettings getCsvSortSettings(Path inputFilePath, String arg) {
-
-        if (arg == null || arg.trim().isEmpty()) {
-            throw new RuntimeException("Invalid argument given for column names");
-        }
-
-        List<String> columnsInArgument = Arrays.asList(arg.split(","));
-
-        if (isNumeric(columnsInArgument.get(0))) {
-
-            CsvSortSettings csvSortSettings = new CsvSortSettings();
-            csvSortSettings.setHasColumnNames(false);
-
-            List<Integer> integerColumns = new ArrayList<Integer>();
-            for (String column : columnsInArgument) {
-                integerColumns.add(Integer.parseInt(column));
-            }
-            csvSortSettings.setSortColumnOrder(integerColumns);
-
-            return csvSortSettings;
-        } else {
-
-            CsvSortSettings csvSortSettings = new CsvSortSettings();
-            csvSortSettings.setHasColumnNames(true);
-            List<String> columnsInCsv = Arrays.asList(getColumnNamesOfCsv(inputFilePath, csvSortSettings));
-
-            List<Integer> integerColumns = new ArrayList<Integer>();
-            List<String> faultyColumns = new ArrayList<String>();
-
-            for (String columnInArgument : columnsInArgument) {
-                Integer index = columnsInCsv.indexOf(columnInArgument);
-
-                if (index == -1) {
-                    faultyColumns.add(columnInArgument);
-                } else {
-                    integerColumns.add(index);
-                }
-            }
-
-            if (faultyColumns.size() > 0) {
-                throw new RuntimeException("Following columns doesn't exist in given csv file: " + faultyColumns.toString());
-            }
-
-            return csvSortSettings;
-        }
     }
 
     public static boolean isNumeric(String s) {

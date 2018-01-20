@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.tools.csv.entity.CsvSortSettings;
@@ -53,7 +52,11 @@ public class CsvMergeSorter {
             dropDirectory.toFile().mkdirs();
         }
 
-        String[] columnNames = Utility.getColumnNamesOfCsv(inputFilePath, csvSortSettings);
+        String[] columnNames = null;
+        if (csvSortSettings.getHasColumnNames()) {
+            columnNames = Utility.getColumnNamesOfCsv(inputFilePath);
+        }
+
         log.info("Splitting....");
         FileSplitter fileSplitter = new FileSplitter();
         List<File> files = fileSplitter.splitFile(inputFilePath, dropDirectory, StatUtils.getManagableSizeInMb().intValue(), true);
@@ -76,6 +79,8 @@ public class CsvMergeSorter {
         CsvSortCliHandler csvSortCliHandler = new CsvSortCliHandler();
         csvSortCliHandler.validate(args);
 
+        //log.info("Parsed columns: {}", csvSortCliHandler.getCsvSortSettings().getSortColumnOrder().toString());
+        //System.exit(0);
         CsvMergeSorter csvMergeSorter = new CsvMergeSorter();
         csvMergeSorter.sort(csvSortCliHandler.getInputFilePath(),
                 csvSortCliHandler.getOutputFilePath(),
