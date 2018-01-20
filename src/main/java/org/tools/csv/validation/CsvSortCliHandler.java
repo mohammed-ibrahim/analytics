@@ -70,6 +70,7 @@ public class CsvSortCliHandler {
         OptionDetails cns = new OptionDetails("column-names", "n", "comma seperated column-names, cannot be used with -c option", true, false);
         OptionDetails sf = new OptionDetails("save-intermediate-files", "s", "whether to save intermediate files", false, false);
         OptionDetails dd = new OptionDetails("dump-directory", "d", "directory where to dump intermeidate files.", true, false);
+        OptionDetails help = new OptionDetails("help", "h", "show help.", false, false);
 
         options.addOption(io.getOption());
         options.addOption(oo.getOption());
@@ -77,6 +78,7 @@ public class CsvSortCliHandler {
         options.addOption(sf.getOption());
         options.addOption(dd.getOption());
         options.addOption(cns.getOption());
+        options.addOption(help.getOption());
 
         GnuParser parser = new GnuParser();
         CommandLine cli = null;
@@ -86,6 +88,10 @@ public class CsvSortCliHandler {
         } catch (Exception e) {
 
             displayHelpAndExit(e.getMessage());
+        }
+
+        if (help.isPresent(cli)) {
+            displayHelpAndExit("Usage");
         }
 
         if (cis.isPresent(cli) && cns.isPresent(cli)) {
