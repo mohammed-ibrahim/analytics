@@ -63,7 +63,8 @@ public class CsvBlockSorter {
             log.info("File-load complete, time-taken: {}", loadtimer.end().toString());
 
             Timer sortingTimer = new Timer();
-            Collections.sort(buffer, new CsvComparator(csvSortSettings.getSortColumnOrder()));
+            Collections.sort(buffer,
+                    new CsvComparator(csvSortSettings.getSortColumnOrder(), csvSortSettings.getIsDescendingOrder()));
             log.info("Sorting complete, time-taken: {}", sortingTimer.end().toString());
 
             //Restore the headers after sorting.

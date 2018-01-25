@@ -68,17 +68,21 @@ public class CsvSortCliHandler {
         OptionDetails oo = new OptionDetails("output", "o", "location of output file", true, true);
         OptionDetails cis = new OptionDetails("column-indexes", "c", "comma seperated column-indexes, 0 -> first column, 1 -> second columns, 2 -> third column...", true, false);
         OptionDetails cns = new OptionDetails("column-names", "n", "comma seperated column-names, cannot be used with -c option", true, false);
+        OptionDetails hcn = new OptionDetails("has-column-names", "m", "whether given input csv has column names? possbile values: y,n,yes,no", true, true);
         OptionDetails sf = new OptionDetails("save-intermediate-files", "s", "whether to save intermediate files", false, false);
         OptionDetails dd = new OptionDetails("dump-directory", "d", "directory where to dump intermeidate files.", true, false);
+        OptionDetails desc = new OptionDetails("descending", "x", "sort in descending order.", false, false);
         OptionDetails help = new OptionDetails("help", "h", "show help.", false, false);
 
         options.addOption(io.getOption());
         options.addOption(oo.getOption());
         options.addOption(cis.getOption());
         options.addOption(sf.getOption());
+        options.addOption(hcn.getOption());
         options.addOption(dd.getOption());
         options.addOption(cns.getOption());
         options.addOption(help.getOption());
+        options.addOption(desc.getOption());
 
         GnuParser parser = new GnuParser();
         CommandLine cli = null;
@@ -110,14 +114,35 @@ public class CsvSortCliHandler {
             this.outputFilePath = Paths.get(oo.getOptionValue(cli));
         }
 
+        Boolean hasColumnNames = false;
+        if (hcn.isPresent(cli)) {
+            String value = hcn.getOptionValue(cli);
+            if (value != null
+                    && value.length() > 0
+                    && Arrays.asList('y', 'Y').contains(value.charAt(0))) {
+
+                hasColumnNames = true;
+            }
+        }
+
         if (cis.isPresent(cli)) {
             String csvCols = cis.getOptionValue(cli);
-            this.csvSortSettings = getCsvSortSettingsForIndexes(csvCols);
+            this.csvSortSettings = getCsvSortSettingsForIndexes(csvCols, hasColumnNames);
         }
 
         if (cns.isPresent(cli)) {
+            if (hasColumnNames == false) {
+                displayHelpAndExit(hcn.fullConfigName + " = y|yes is mandatory for the option: " + cns.fullConfigName);
+            }
+
             String csvCols = cns.getOptionValue(cli);
-            this.csvSortSettings = getCsvSortSettingsForColumnNames(inputFilePath, csvCols);
+            this.csvSortSettings = getCsvSortSettingsForColumnNames(inputFilePath, csvCols, hasColumnNames);
+        }
+
+        if (desc.isPresent(cli)) {
+            this.csvSortSettings.setIsDescendingOrder(true);
+        } else {
+            this.csvSortSettings.setIsDescendingOrder(false);
         }
 
         if (sf.isPresent(cli)) {
@@ -139,7 +164,7 @@ public class CsvSortCliHandler {
         System.exit(1);
     }
 
-    private CsvSortSettings getCsvSortSettingsForIndexes(String arg) {
+    private CsvSortSettings getCsvSortSettingsForIndexes(String arg, boolean hasColumnNames) {
         if (arg == null || arg.trim().isEmpty()) {
             displayHelpAndExit("Invalid argument given for column-indexes");
         }
@@ -158,15 +183,18 @@ public class CsvSortCliHandler {
         }
 
         CsvSortSettings csvSortSettings = new CsvSortSettings();
-        csvSortSettings.setHasColumnNames(false);
+        csvSortSettings.setHasColumnNames(hasColumnNames);
         csvSortSettings.setSortColumnOrder(columnIndexes);
         return csvSortSettings;
     }
 
-    private CsvSortSettings getCsvSortSettingsForColumnNames(Path inputFilePath, String columnNamesInArgument) {
+    private CsvSortSettings getCsvSortSettingsForColumnNames(
+            Path inputFilePath,
+            String columnNamesInArgument,
+            boolean hasColumnNames) {
 
         CsvSortSettings csvSortSettings = new CsvSortSettings();
-        csvSortSettings.setHasColumnNames(true);
+        csvSortSettings.setHasColumnNames(hasColumnNames);
 
         List<String> columnsInCsv = Arrays.asList(Utility.getColumnNamesOfCsv(inputFilePath));
         List<Integer> successfullyMatchedColumnsFromArgToCsv = new ArrayList<Integer>();

@@ -8,6 +8,8 @@ import lombok.Data;
 public class CsvSortSettings {
 
     private List<Integer> sortColumnOrder;
-    
+
     private Boolean hasColumnNames;
+
+    private Boolean isDescendingOrder;
 }
