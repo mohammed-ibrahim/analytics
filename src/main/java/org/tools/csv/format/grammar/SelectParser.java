@@ -1,5 +1,5 @@
 // Generated from ./src/main/resources/Select.g4 by ANTLR 4.5.1
-package org.tools.csv.format.grammer;
+package org.tools.csv.format.grammar;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;

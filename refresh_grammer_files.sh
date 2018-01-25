@@ -1,5 +1,5 @@
 # 1. Buildes tokens and java files based on grammer file.
-java -jar ./lib/antlr-4.5.1-complete.jar ./src/main/resources/Select.g4 -visitor -package org.tools.csv.format.grammer -no-listener &&
+java -jar ./lib/antlr-4.5.1-complete.jar ./src/main/resources/Select.g4 -visitor -package org.tools.csv.format.grammar -no-listener &&
 
 # 2. Remove the older grammer files.
 rm ./src/main/java/org/tools/csv/format/grammar/*
