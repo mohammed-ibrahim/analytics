@@ -39,19 +39,19 @@ public interface SelectVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOrFilterExpr(SelectParser.OrFilterExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ParenExprt}
-	 * labeled alternative in {@link SelectParser#filter_expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParenExprt(SelectParser.ParenExprtContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code SimpleFilter}
 	 * labeled alternative in {@link SelectParser#filter_expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitSimpleFilter(SelectParser.SimpleFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ParenExpr}
+	 * labeled alternative in {@link SelectParser#filter_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParenExpr(SelectParser.ParenExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code AndFilterExpr}
 	 * labeled alternative in {@link SelectParser#filter_expr}.

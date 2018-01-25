@@ -45,14 +45,14 @@ public class SelectBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitParenExprt(SelectParser.ParenExprtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitSimpleFilter(SelectParser.SimpleFilterContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSimpleFilter(SelectParser.SimpleFilterContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParenExpr(SelectParser.ParenExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

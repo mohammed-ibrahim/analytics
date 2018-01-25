@@ -12,7 +12,7 @@ select_element  : COL_N_WSTAR                                       #SelectEleme
 
 filter_expr     : filter_expr AND filter_expr                       #AndFilterExpr
                 | filter_expr OR filter_expr                        #OrFilterExpr
-                | OPENPAREN filter_expr CLOSEPAREN                  #ParenExprt
+                | OPENPAREN filter_expr CLOSEPAREN                  #ParenExpr
                 | filter                                            #SimpleFilter
                 ;
 

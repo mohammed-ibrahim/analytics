@@ -276,19 +276,6 @@ public class SelectParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class ParenExprtContext extends Filter_exprContext {
-		public TerminalNode OPENPAREN() { return getToken(SelectParser.OPENPAREN, 0); }
-		public Filter_exprContext filter_expr() {
-			return getRuleContext(Filter_exprContext.class,0);
-		}
-		public TerminalNode CLOSEPAREN() { return getToken(SelectParser.CLOSEPAREN, 0); }
-		public ParenExprtContext(Filter_exprContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitParenExprt(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class SimpleFilterContext extends Filter_exprContext {
 		public FilterContext filter() {
 			return getRuleContext(FilterContext.class,0);
@@ -297,6 +284,19 @@ public class SelectParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitSimpleFilter(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ParenExprContext extends Filter_exprContext {
+		public TerminalNode OPENPAREN() { return getToken(SelectParser.OPENPAREN, 0); }
+		public Filter_exprContext filter_expr() {
+			return getRuleContext(Filter_exprContext.class,0);
+		}
+		public TerminalNode CLOSEPAREN() { return getToken(SelectParser.CLOSEPAREN, 0); }
+		public ParenExprContext(Filter_exprContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitParenExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -335,7 +335,7 @@ public class SelectParser extends Parser {
 			switch (_input.LA(1)) {
 			case OPENPAREN:
 				{
-				_localctx = new ParenExprtContext(_localctx);
+				_localctx = new ParenExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
