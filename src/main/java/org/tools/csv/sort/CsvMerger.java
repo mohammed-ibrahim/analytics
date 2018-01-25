@@ -58,6 +58,11 @@ public class CsvMerger {
             writer.writeNext(columnNames);
             writer.close();
             new FileAppender().append(sortedFile.toPath(), outputFilePath);
+
+            //delete the tmp sort file after merging..
+            if (deleteSourceFile) {
+                sortedFile.delete();
+            }
         } else {
 
             sortedFile.renameTo(outputFilePath.toFile());
