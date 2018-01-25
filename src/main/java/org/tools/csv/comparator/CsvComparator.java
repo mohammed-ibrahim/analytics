@@ -7,9 +7,16 @@ public class CsvComparator implements Comparator<String[]> {
 
     private List<Integer> columnOrder = null;
 
-    public CsvComparator(List<Integer> columnOrderItems) {
+    private Boolean isDescendingOrder;
+
+    public CsvComparator(List<Integer> columnOrderItems, Boolean isDescendingOrder) {
 
         this.columnOrder = columnOrderItems;
+        this.isDescendingOrder = isDescendingOrder;
+    }
+
+    private int checkOrder(int result) {
+        return this.isDescendingOrder ? (result * (-1)) : result;
     }
 
     @Override
@@ -31,18 +38,18 @@ public class CsvComparator implements Comparator<String[]> {
                 }
 
                 if (originalLhs != null && originalRhs == null) {
-                    return -1;
+                    return checkOrder(-1);
                 }
 
                 if (originalLhs == null && originalRhs != null) {
-                    return 1;
+                    return checkOrder(1);
                 }
 
                 int result = originalLhs.toLowerCase().compareTo(originalRhs.toLowerCase());
 
                 if (result != 0) {
 
-                    return result;
+                    return checkOrder(result);
                 } else {
 
                     //delete to next row if current comparision is equal.
@@ -52,11 +59,11 @@ public class CsvComparator implements Comparator<String[]> {
 
             if (lhs != null || rhs != null) {
                 if (lhs != null && rhs == null) {
-                    return -1;
+                    return checkOrder(-1);
                 }
 
                 if (lhs == null && rhs != null) {
-                    return 1;
+                    return checkOrder(1);
                 }
 
                 if (lhs.equals(rhs)) {
@@ -66,7 +73,7 @@ public class CsvComparator implements Comparator<String[]> {
                 int result = lhs.compareTo(rhs);
                 if (result != 0) {
 
-                    return result;
+                    return checkOrder(result);
                 } else {
 
                     //delete to next row if current comparision is equal.
@@ -76,6 +83,7 @@ public class CsvComparator implements Comparator<String[]> {
         }
 
         //If all the columns are same then return 0;
+        //No need to call check order here as 0 is same for asc and desc.
         return 0;
     }
 

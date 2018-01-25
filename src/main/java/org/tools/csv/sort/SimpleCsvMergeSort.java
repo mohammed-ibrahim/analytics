@@ -32,7 +32,7 @@ public class SimpleCsvMergeSort {
                 CSVReader readerb = new CSVReader(new FileReader(pathb.toFile()));
                 CSVWriter writerc = new CSVWriter(new FileWriter(pathc.toFile()))) {
 
-            CsvComparator csvComparator = new CsvComparator(csvSortSettings.getSortColumnOrder());
+            CsvComparator csvComparator = new CsvComparator(csvSortSettings.getSortColumnOrder(), csvSortSettings.getIsDescendingOrder());
             String[] linea = readera.readNext();
             String[] lineb = readerb.readNext();
 

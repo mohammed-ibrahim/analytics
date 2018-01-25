@@ -71,6 +71,7 @@ public class CsvSortCliHandler {
         OptionDetails hcn = new OptionDetails("has-column-names", "m", "whether given input csv has column names? possbile values: y,n,yes,no", true, true);
         OptionDetails sf = new OptionDetails("save-intermediate-files", "s", "whether to save intermediate files", false, false);
         OptionDetails dd = new OptionDetails("dump-directory", "d", "directory where to dump intermeidate files.", true, false);
+        OptionDetails desc = new OptionDetails("descending", "x", "sort in descending order.", false, false);
         OptionDetails help = new OptionDetails("help", "h", "show help.", false, false);
 
         options.addOption(io.getOption());
@@ -81,6 +82,7 @@ public class CsvSortCliHandler {
         options.addOption(dd.getOption());
         options.addOption(cns.getOption());
         options.addOption(help.getOption());
+        options.addOption(desc.getOption());
 
         GnuParser parser = new GnuParser();
         CommandLine cli = null;
@@ -135,6 +137,12 @@ public class CsvSortCliHandler {
 
             String csvCols = cns.getOptionValue(cli);
             this.csvSortSettings = getCsvSortSettingsForColumnNames(inputFilePath, csvCols, hasColumnNames);
+        }
+
+        if (desc.isPresent(cli)) {
+            this.csvSortSettings.setIsDescendingOrder(true);
+        } else {
+            this.csvSortSettings.setIsDescendingOrder(false);
         }
 
         if (sf.isPresent(cli)) {
