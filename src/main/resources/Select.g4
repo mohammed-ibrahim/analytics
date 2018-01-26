@@ -12,6 +12,7 @@ expression
  | bool                                           #boolExpression
  | IDENTIFIER                                     #identifierExpression
  | DECIMAL                                        #decimalExpression
+ | SLITERAL                                       #sliteralExpression
  ;
 
 comparator
@@ -40,4 +41,5 @@ LPAREN     : '(' ;
 RPAREN     : ')' ;
 DECIMAL    : '-'? [0-9]+ ( '.' [0-9]+ )? ;
 IDENTIFIER : [a-zA-Z_] [a-zA-Z_0-9]* ;
+SLITERAL   : '\'' ~[ \t\r\n")(=,]+ '\'';
 WS         : [ \r\t\u000C\n]+ -> skip;

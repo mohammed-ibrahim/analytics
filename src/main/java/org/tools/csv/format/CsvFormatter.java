@@ -24,7 +24,7 @@ public class CsvFormatter {
 
     public static void run(String[] args) throws Exception {
         String str = "";
-        str = "a = b OR (col1 = 33 AND col2 = 55)";
+        str = "'first_name' = 'last_name' OR (col1 = 33 AND col2 = 55)";
 
         ANTLRInputStream input = new ANTLRInputStream(str);
         SelectLexer selectLexer = new SelectLexer(input);

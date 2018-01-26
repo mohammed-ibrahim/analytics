@@ -18,7 +18,7 @@ public class SelectParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		AND=1, OR=2, NOT=3, TRUE=4, FALSE=5, GT=6, GE=7, LT=8, LE=9, EQ=10, LPAREN=11, 
-		RPAREN=12, DECIMAL=13, IDENTIFIER=14, WS=15;
+		RPAREN=12, DECIMAL=13, IDENTIFIER=14, SLITERAL=15, WS=16;
 	public static final int
 		RULE_parse = 0, RULE_expression = 1, RULE_comparator = 2, RULE_binary = 3, 
 		RULE_bool = 4;
@@ -32,7 +32,7 @@ public class SelectParser extends Parser {
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, "AND", "OR", "NOT", "TRUE", "FALSE", "GT", "GE", "LT", "LE", "EQ", 
-		"LPAREN", "RPAREN", "DECIMAL", "IDENTIFIER", "WS"
+		"LPAREN", "RPAREN", "DECIMAL", "IDENTIFIER", "SLITERAL", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -131,6 +131,15 @@ public class SelectParser extends Parser {
 		public ExpressionContext() { }
 		public void copyFrom(ExpressionContext ctx) {
 			super.copyFrom(ctx);
+		}
+	}
+	public static class SliteralExpressionContext extends ExpressionContext {
+		public TerminalNode SLITERAL() { return getToken(SelectParser.SLITERAL, 0); }
+		public SliteralExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitSliteralExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class BinaryExpressionContext extends ExpressionContext {
@@ -243,7 +252,7 @@ public class SelectParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(23);
+			setState(24);
 			switch (_input.LA(1)) {
 			case NOT:
 				{
@@ -254,7 +263,7 @@ public class SelectParser extends Parser {
 				setState(14);
 				match(NOT);
 				setState(15);
-				expression(6);
+				expression(7);
 				}
 				break;
 			case LPAREN:
@@ -298,11 +307,20 @@ public class SelectParser extends Parser {
 				match(DECIMAL);
 				}
 				break;
+			case SLITERAL:
+				{
+				_localctx = new SliteralExpressionContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(23);
+				match(SLITERAL);
+				}
+				break;
 			default:
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(35);
+			setState(36);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -310,19 +328,19 @@ public class SelectParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(33);
+					setState(34);
 					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
 						_localctx = new ComparatorExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						((ComparatorExpressionContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(25);
-						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(26);
-						((ComparatorExpressionContext)_localctx).op = comparator();
+						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(27);
-						((ComparatorExpressionContext)_localctx).right = expression(6);
+						((ComparatorExpressionContext)_localctx).op = comparator();
+						setState(28);
+						((ComparatorExpressionContext)_localctx).right = expression(7);
 						}
 						break;
 					case 2:
@@ -330,18 +348,18 @@ public class SelectParser extends Parser {
 						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						((BinaryExpressionContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(29);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(30);
-						((BinaryExpressionContext)_localctx).op = binary();
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(31);
-						((BinaryExpressionContext)_localctx).right = expression(5);
+						((BinaryExpressionContext)_localctx).op = binary();
+						setState(32);
+						((BinaryExpressionContext)_localctx).right = expression(6);
 						}
 						break;
 					}
 					} 
 				}
-				setState(37);
+				setState(38);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			}
@@ -382,7 +400,7 @@ public class SelectParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(38);
+			setState(39);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << GT) | (1L << GE) | (1L << LT) | (1L << LE) | (1L << EQ))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -423,7 +441,7 @@ public class SelectParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(40);
+			setState(41);
 			_la = _input.LA(1);
 			if ( !(_la==AND || _la==OR) ) {
 			_errHandler.recoverInline(this);
@@ -464,7 +482,7 @@ public class SelectParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(42);
+			setState(43);
 			_la = _input.LA(1);
 			if ( !(_la==TRUE || _la==FALSE) ) {
 			_errHandler.recoverInline(this);
@@ -494,27 +512,27 @@ public class SelectParser extends Parser {
 	private boolean expression_sempred(ExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 5);
+			return precpred(_ctx, 6);
 		case 1:
-			return precpred(_ctx, 4);
+			return precpred(_ctx, 5);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\21/\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
-		"\3\3\3\3\5\3\32\n\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3$\n\3\f\3\16\3"+
-		"\'\13\3\3\4\3\4\3\5\3\5\3\6\3\6\3\6\2\3\4\7\2\4\6\b\n\2\5\3\2\b\f\3\2"+
-		"\3\4\3\2\6\7/\2\f\3\2\2\2\4\31\3\2\2\2\6(\3\2\2\2\b*\3\2\2\2\n,\3\2\2"+
-		"\2\f\r\5\4\3\2\r\16\7\2\2\3\16\3\3\2\2\2\17\20\b\3\1\2\20\21\7\5\2\2\21"+
-		"\32\5\4\3\b\22\23\7\r\2\2\23\24\5\4\3\2\24\25\7\16\2\2\25\32\3\2\2\2\26"+
-		"\32\5\n\6\2\27\32\7\20\2\2\30\32\7\17\2\2\31\17\3\2\2\2\31\22\3\2\2\2"+
-		"\31\26\3\2\2\2\31\27\3\2\2\2\31\30\3\2\2\2\32%\3\2\2\2\33\34\f\7\2\2\34"+
-		"\35\5\6\4\2\35\36\5\4\3\b\36$\3\2\2\2\37 \f\6\2\2 !\5\b\5\2!\"\5\4\3\7"+
-		"\"$\3\2\2\2#\33\3\2\2\2#\37\3\2\2\2$\'\3\2\2\2%#\3\2\2\2%&\3\2\2\2&\5"+
-		"\3\2\2\2\'%\3\2\2\2()\t\2\2\2)\7\3\2\2\2*+\t\3\2\2+\t\3\2\2\2,-\t\4\2"+
-		"\2-\13\3\2\2\2\5\31#%";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\22\60\4\2\t\2\4\3"+
+		"\t\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
+		"\3\3\3\3\3\3\3\5\3\33\n\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3%\n\3\f\3"+
+		"\16\3(\13\3\3\4\3\4\3\5\3\5\3\6\3\6\3\6\2\3\4\7\2\4\6\b\n\2\5\3\2\b\f"+
+		"\3\2\3\4\3\2\6\7\61\2\f\3\2\2\2\4\32\3\2\2\2\6)\3\2\2\2\b+\3\2\2\2\n-"+
+		"\3\2\2\2\f\r\5\4\3\2\r\16\7\2\2\3\16\3\3\2\2\2\17\20\b\3\1\2\20\21\7\5"+
+		"\2\2\21\33\5\4\3\t\22\23\7\r\2\2\23\24\5\4\3\2\24\25\7\16\2\2\25\33\3"+
+		"\2\2\2\26\33\5\n\6\2\27\33\7\20\2\2\30\33\7\17\2\2\31\33\7\21\2\2\32\17"+
+		"\3\2\2\2\32\22\3\2\2\2\32\26\3\2\2\2\32\27\3\2\2\2\32\30\3\2\2\2\32\31"+
+		"\3\2\2\2\33&\3\2\2\2\34\35\f\b\2\2\35\36\5\6\4\2\36\37\5\4\3\t\37%\3\2"+
+		"\2\2 !\f\7\2\2!\"\5\b\5\2\"#\5\4\3\b#%\3\2\2\2$\34\3\2\2\2$ \3\2\2\2%"+
+		"(\3\2\2\2&$\3\2\2\2&\'\3\2\2\2\'\5\3\2\2\2(&\3\2\2\2)*\t\2\2\2*\7\3\2"+
+		"\2\2+,\t\3\2\2,\t\3\2\2\2-.\t\4\2\2.\13\3\2\2\2\5\32$&";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -57,6 +57,16 @@ public class Analyzer extends SelectBaseVisitor<Object> {
     public Object visitDecimalExpression(SelectParser.DecimalExpressionContext ctx) {
         return Double.valueOf(ctx.DECIMAL().getText());
     }
+
+    @Override
+    public Object visitSliteralExpression(SelectParser.SliteralExpressionContext ctx) {
+        return stripQuotes(ctx.getText());
+    }
+
+    private String stripQuotes(String text) {
+        return text.substring(1, text.length()-1);
+    }
+
     /**
      * {@inheritDoc}
      *
