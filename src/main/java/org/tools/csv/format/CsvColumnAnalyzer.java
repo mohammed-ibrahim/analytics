@@ -16,19 +16,9 @@ public class CsvColumnAnalyzer {
 
     private List<Integer> columnIndexes;
 
-    public void compile(String columnExpression, List<String> columnNamesInsideCsv) {
+    public void compile(List<String> inputColumnExpression, List<String> columnNamesInsideCsv) {
 
-        if (Utility.isNullOrEmpty(columnExpression)) {
-
-            this.columnIndexes = columnNamesInsideCsv
-                    .stream()
-                    .map(i -> columnNamesInsideCsv.indexOf(i))
-                    .collect(Collectors.toList());
-
-            return;
-        }
-
-        List<String> columnExpressionList = Arrays.asList(columnExpression.split(","))
+        List<String> columnExpressionList = inputColumnExpression
                 .stream()
                 .filter(i -> !i.isEmpty())
                 .collect(Collectors.toList());

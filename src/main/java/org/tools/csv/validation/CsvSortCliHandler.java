@@ -32,35 +32,6 @@ public class CsvSortCliHandler {
 
     private Options options;
 
-    @AllArgsConstructor
-    private class OptionDetails {
-
-        private String fullConfigName;
-
-        private String shortConfigName;
-
-        private String desc;
-
-        private Boolean hasArg;
-
-        private Boolean required;
-
-        public Option getOption() {
-            Option opt = new Option(shortConfigName, fullConfigName, hasArg, desc);
-            opt.setRequired(required);
-
-            return opt;
-        }
-
-        public boolean isPresent(CommandLine cli) {
-            return cli.hasOption(this.fullConfigName);
-        }
-
-        public String getOptionValue(CommandLine cli) {
-            return cli.getOptionValue(this.fullConfigName);
-        }
-    }
-
     public void validate(String args[]) {
         options = new Options();
 
@@ -132,7 +103,7 @@ public class CsvSortCliHandler {
 
         if (cns.isPresent(cli)) {
             if (hasColumnNames == false) {
-                displayHelpAndExit(hcn.fullConfigName + " = y|yes is mandatory for the option: " + cns.fullConfigName);
+                displayHelpAndExit(hcn.getFullConfigName() + " = y|yes is mandatory for the option: " + cns.getFullConfigName());
             }
 
             String csvCols = cns.getOptionValue(cli);
