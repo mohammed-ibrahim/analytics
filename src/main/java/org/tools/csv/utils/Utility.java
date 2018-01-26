@@ -35,4 +35,16 @@ public class Utility {
     public static boolean isNumeric(String s) {
         return s != null && s.matches("[-+]?\\d*\\.?\\d+");
     }
+
+    public static boolean isNullOrEmpty(String s) {
+        if (s == null) {
+            return true;
+        }
+
+        if (s.trim().isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
 }
