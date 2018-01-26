@@ -20,7 +20,7 @@ expression
  ;
 
 comparator
- : GT | GE | LT | LE | EQ
+ : GT | GE | LT | LE | EQ | NE | IS
  ;
 
 binary
@@ -41,6 +41,8 @@ GE         : '>=' ;
 LT         : '<' ;
 LE         : '<=' ;
 EQ         : '=' ;
+NE         : '!=' ;
+IS         : 'is' ;
 LPAREN     : '(' ;
 RPAREN     : ')' ;
 DECIMAL    : '-'? [0-9]+ ( '.' [0-9]+ )? ;

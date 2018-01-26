@@ -7,6 +7,7 @@ import org.tools.csv.format.entity.Format;
 import org.tools.csv.format.entity.Node;
 import org.tools.csv.format.entity.NodeType;
 import org.tools.csv.format.entity.leafnode.ColumnNameLeafNode;
+import org.tools.csv.format.entity.leafnode.NullFieldNode;
 import org.tools.csv.format.grammar.SelectBaseVisitor;
 import org.tools.csv.format.grammar.SelectParser;
 
@@ -102,7 +103,13 @@ public class Analyzer extends SelectBaseVisitor<Object> {
      */
     @Override
     public Object visitIdentifierExpression(SelectParser.IdentifierExpressionContext ctx) {
-        return new ColumnNameLeafNode(ctx.IDENTIFIER().getText());
+        String text = ctx.IDENTIFIER().getText();
+        if (text != null && text.equals("null")) {
+
+            return new NullFieldNode();
+        }
+
+        return new ColumnNameLeafNode(text);
     }
     /**
      * {@inheritDoc}
@@ -176,7 +183,14 @@ public class Analyzer extends SelectBaseVisitor<Object> {
                     .withRhs(visit(ctx.right));
 
         }
+        if (ctx.op.IS() != null) {
+            Node node = new Node();
 
+            return node.withOp(NodeType.IS)
+                    .withLhs(visit(ctx.left))
+                    .withRhs(visit(ctx.right));
+
+        }
         throw new RuntimeException("not implemented: comparator operator " + ctx.op.getText());
     }
     /**

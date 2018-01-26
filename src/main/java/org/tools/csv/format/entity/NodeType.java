@@ -15,6 +15,7 @@ public enum NodeType {
     GE,
     NE,
     IN,
+    IS,
     LIKE,
     ROOT_EXPR;
     

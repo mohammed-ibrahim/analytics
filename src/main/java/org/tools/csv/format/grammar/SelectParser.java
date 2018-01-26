@@ -18,8 +18,8 @@ public class SelectParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, AND=4, OR=5, NOT=6, TRUE=7, FALSE=8, GT=9, GE=10, 
-		LT=11, LE=12, EQ=13, LPAREN=14, RPAREN=15, DECIMAL=16, IDENTIFIER=17, 
-		SLITERAL=18, WS=19;
+		LT=11, LE=12, EQ=13, NE=14, IS=15, LPAREN=16, RPAREN=17, DECIMAL=18, IDENTIFIER=19, 
+		SLITERAL=20, WS=21;
 	public static final int
 		RULE_parse = 0, RULE_select_list = 1, RULE_expression = 2, RULE_comparator = 3, 
 		RULE_binary = 4, RULE_bool = 5;
@@ -29,12 +29,13 @@ public class SelectParser extends Parser {
 
 	private static final String[] _LITERAL_NAMES = {
 		null, "'select'", "'where'", "','", "'AND'", "'OR'", "'NOT'", "'TRUE'", 
-		"'FALSE'", "'>'", "'>='", "'<'", "'<='", "'='", "'('", "')'"
+		"'FALSE'", "'>'", "'>='", "'<'", "'<='", "'='", "'!='", "'is'", "'('", 
+		"')'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, "AND", "OR", "NOT", "TRUE", "FALSE", "GT", "GE", 
-		"LT", "LE", "EQ", "LPAREN", "RPAREN", "DECIMAL", "IDENTIFIER", "SLITERAL", 
-		"WS"
+		"LT", "LE", "EQ", "NE", "IS", "LPAREN", "RPAREN", "DECIMAL", "IDENTIFIER", 
+		"SLITERAL", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -456,6 +457,8 @@ public class SelectParser extends Parser {
 		public TerminalNode LT() { return getToken(SelectParser.LT, 0); }
 		public TerminalNode LE() { return getToken(SelectParser.LE, 0); }
 		public TerminalNode EQ() { return getToken(SelectParser.EQ, 0); }
+		public TerminalNode NE() { return getToken(SelectParser.NE, 0); }
+		public TerminalNode IS() { return getToken(SelectParser.IS, 0); }
 		public ComparatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -476,7 +479,7 @@ public class SelectParser extends Parser {
 			{
 			setState(52);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << GT) | (1L << GE) | (1L << LT) | (1L << LE) | (1L << EQ))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << GT) | (1L << GE) | (1L << LT) | (1L << LE) | (1L << EQ) | (1L << NE) | (1L << IS))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -594,18 +597,18 @@ public class SelectParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\25=\4\2\t\2\4\3\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\27=\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3"+
 		"\7\3\30\n\3\f\3\16\3\33\13\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3"+
 		"\4\5\4(\n\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4\62\n\4\f\4\16\4\65\13"+
-		"\4\3\5\3\5\3\6\3\6\3\7\3\7\3\7\2\3\6\b\2\4\6\b\n\f\2\5\3\2\13\17\3\2\6"+
+		"\4\3\5\3\5\3\6\3\6\3\7\3\7\3\7\2\3\6\b\2\4\6\b\n\f\2\5\3\2\13\21\3\2\6"+
 		"\7\3\2\t\n>\2\16\3\2\2\2\4\24\3\2\2\2\6\'\3\2\2\2\b\66\3\2\2\2\n8\3\2"+
 		"\2\2\f:\3\2\2\2\16\17\7\3\2\2\17\20\5\4\3\2\20\21\7\4\2\2\21\22\5\6\4"+
-		"\2\22\23\7\2\2\3\23\3\3\2\2\2\24\31\7\23\2\2\25\26\7\5\2\2\26\30\7\23"+
+		"\2\22\23\7\2\2\3\23\3\3\2\2\2\24\31\7\25\2\2\25\26\7\5\2\2\26\30\7\25"+
 		"\2\2\27\25\3\2\2\2\30\33\3\2\2\2\31\27\3\2\2\2\31\32\3\2\2\2\32\5\3\2"+
-		"\2\2\33\31\3\2\2\2\34\35\b\4\1\2\35\36\7\b\2\2\36(\5\6\4\t\37 \7\20\2"+
-		"\2 !\5\6\4\2!\"\7\21\2\2\"(\3\2\2\2#(\5\f\7\2$(\7\23\2\2%(\7\22\2\2&("+
-		"\7\24\2\2\'\34\3\2\2\2\'\37\3\2\2\2\'#\3\2\2\2\'$\3\2\2\2\'%\3\2\2\2\'"+
+		"\2\2\33\31\3\2\2\2\34\35\b\4\1\2\35\36\7\b\2\2\36(\5\6\4\t\37 \7\22\2"+
+		"\2 !\5\6\4\2!\"\7\23\2\2\"(\3\2\2\2#(\5\f\7\2$(\7\25\2\2%(\7\24\2\2&("+
+		"\7\26\2\2\'\34\3\2\2\2\'\37\3\2\2\2\'#\3\2\2\2\'$\3\2\2\2\'%\3\2\2\2\'"+
 		"&\3\2\2\2(\63\3\2\2\2)*\f\b\2\2*+\5\b\5\2+,\5\6\4\t,\62\3\2\2\2-.\f\7"+
 		"\2\2./\5\n\6\2/\60\5\6\4\b\60\62\3\2\2\2\61)\3\2\2\2\61-\3\2\2\2\62\65"+
 		"\3\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64\7\3\2\2\2\65\63\3\2\2\2\66\67"+
