@@ -17,6 +17,13 @@ public interface SelectVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParse(SelectParser.ParseContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code selectElement}
+	 * labeled alternative in {@link SelectParser#select_list}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSelectElement(SelectParser.SelectElementContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code sliteralExpression}
 	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree

@@ -1,5 +1,9 @@
 package org.tools.csv.format;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.tools.csv.format.entity.Format;
 import org.tools.csv.format.entity.Node;
 import org.tools.csv.format.entity.NodeType;
 import org.tools.csv.format.entity.leafnode.ColumnNameLeafNode;
@@ -15,7 +19,10 @@ public class Analyzer extends SelectBaseVisitor<Object> {
      */
     @Override
     public Object visitParse(SelectParser.ParseContext ctx) {
-        return visit(ctx.expression());
+        Format fmt = new Format();
+        fmt.setRawColumns((List<String>)visit(ctx.select_list()));
+        fmt.setNode((Node)visit(ctx.expression()));
+        return fmt;
     }
     /**
      * {@inheritDoc}
@@ -65,6 +72,16 @@ public class Analyzer extends SelectBaseVisitor<Object> {
 
     private String stripQuotes(String text) {
         return text.substring(1, text.length()-1);
+    }
+
+    @Override
+    public Object visitSelectElement(SelectParser.SelectElementContext ctx) {
+        List<String> selectItems = ctx.IDENTIFIER()
+                .stream()
+                .map(i -> i.getText())
+                .collect(Collectors.toList());
+
+        return selectItems;
     }
 
     /**

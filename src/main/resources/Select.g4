@@ -1,7 +1,11 @@
 grammar Select;
 
 parse
- : 'select' 'where' expression EOF
+ : 'select' select_list 'where' expression EOF
+ ;
+
+select_list
+ : IDENTIFIER (',' IDENTIFIER)*                               #selectElement
  ;
 
 expression
@@ -40,6 +44,6 @@ EQ         : '=' ;
 LPAREN     : '(' ;
 RPAREN     : ')' ;
 DECIMAL    : '-'? [0-9]+ ( '.' [0-9]+ )? ;
-IDENTIFIER : [a-zA-Z_] [a-zA-Z_0-9]* ;
-SLITERAL   : '\'' ~[ \t\r\n")(=,]+ '\'';
+IDENTIFIER : [a-zA-Z_*] [a-zA-Z_0-9*]* ;
+SLITERAL   : '\'' IDENTIFIER '\'';
 WS         : [ \r\t\u000C\n]+ -> skip;

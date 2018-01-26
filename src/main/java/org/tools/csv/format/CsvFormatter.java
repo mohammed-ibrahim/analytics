@@ -24,7 +24,7 @@ public class CsvFormatter {
 
     public static void run(String[] args) throws Exception {
         String str = "";
-        str = "select where 'first_name' = 'last_name' OR (col1 = 33 AND col2 = 55)";
+        str = "select hello,*v1*test,*v2 where 'first_name' = 'last_name' OR (col1 = 33 AND col2 = 55)";
 
         ANTLRInputStream input = new ANTLRInputStream(str);
         SelectLexer selectLexer = new SelectLexer(input);
@@ -36,7 +36,6 @@ public class CsvFormatter {
         //selectParser.setErrorHandler(new BailErrorStrategy());
         selectParser.removeErrorListeners();
         selectParser.addErrorListener(DescriptiveErrorListener.INSTANCE);
-
 
         ParseTree tree = selectParser.parse();
         Analyzer analyzer = new Analyzer();
