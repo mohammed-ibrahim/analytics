@@ -11,115 +11,76 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface SelectVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by the {@code QueryExpression}
-	 * labeled alternative in {@link SelectParser#query}.
+	 * Visit a parse tree produced by {@link SelectParser#parse}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitQueryExpression(SelectParser.QueryExpressionContext ctx);
+	T visitParse(SelectParser.ParseContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code SelectList}
-	 * labeled alternative in {@link SelectParser#select_list}.
+	 * Visit a parse tree produced by the {@code binaryExpression}
+	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSelectList(SelectParser.SelectListContext ctx);
+	T visitBinaryExpression(SelectParser.BinaryExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code SelectElement}
-	 * labeled alternative in {@link SelectParser#select_element}.
+	 * Visit a parse tree produced by the {@code decimalExpression}
+	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSelectElement(SelectParser.SelectElementContext ctx);
+	T visitDecimalExpression(SelectParser.DecimalExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code OrFilterExpr}
-	 * labeled alternative in {@link SelectParser#filter_expr}.
+	 * Visit a parse tree produced by the {@code boolExpression}
+	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOrFilterExpr(SelectParser.OrFilterExprContext ctx);
+	T visitBoolExpression(SelectParser.BoolExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code SimpleFilter}
-	 * labeled alternative in {@link SelectParser#filter_expr}.
+	 * Visit a parse tree produced by the {@code identifierExpression}
+	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSimpleFilter(SelectParser.SimpleFilterContext ctx);
+	T visitIdentifierExpression(SelectParser.IdentifierExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ParenExpr}
-	 * labeled alternative in {@link SelectParser#filter_expr}.
+	 * Visit a parse tree produced by the {@code notExpression}
+	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParenExpr(SelectParser.ParenExprContext ctx);
+	T visitNotExpression(SelectParser.NotExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code AndFilterExpr}
-	 * labeled alternative in {@link SelectParser#filter_expr}.
+	 * Visit a parse tree produced by the {@code parenExpression}
+	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAndFilterExpr(SelectParser.AndFilterExprContext ctx);
+	T visitParenExpression(SelectParser.ParenExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code BasicFilter}
-	 * labeled alternative in {@link SelectParser#filter}.
+	 * Visit a parse tree produced by the {@code comparatorExpression}
+	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBasicFilter(SelectParser.BasicFilterContext ctx);
+	T visitComparatorExpression(SelectParser.ComparatorExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code InopFilter}
-	 * labeled alternative in {@link SelectParser#filter}.
+	 * Visit a parse tree produced by {@link SelectParser#comparator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitInopFilter(SelectParser.InopFilterContext ctx);
+	T visitComparator(SelectParser.ComparatorContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code LikeFilter}
-	 * labeled alternative in {@link SelectParser#filter}.
+	 * Visit a parse tree produced by {@link SelectParser#binary}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLikeFilter(SelectParser.LikeFilterContext ctx);
+	T visitBinary(SelectParser.BinaryContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code StringLiteral}
-	 * labeled alternative in {@link SelectParser#literal}.
+	 * Visit a parse tree produced by {@link SelectParser#bool}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStringLiteral(SelectParser.StringLiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code IntLiteral}
-	 * labeled alternative in {@link SelectParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIntLiteral(SelectParser.IntLiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code FloatLiteral}
-	 * labeled alternative in {@link SelectParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFloatLiteral(SelectParser.FloatLiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code BoolLiteral}
-	 * labeled alternative in {@link SelectParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBoolLiteral(SelectParser.BoolLiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code LiteralColName}
-	 * labeled alternative in {@link SelectParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLiteralColName(SelectParser.LiteralColNameContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code LiteralListExpr}
-	 * labeled alternative in {@link SelectParser#literal_list}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLiteralListExpr(SelectParser.LiteralListExprContext ctx);
+	T visitBool(SelectParser.BoolContext ctx);
 }

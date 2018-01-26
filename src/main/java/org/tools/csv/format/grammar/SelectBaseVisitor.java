@@ -17,110 +17,75 @@ public class SelectBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitQueryExpression(SelectParser.QueryExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParse(SelectParser.ParseContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSelectList(SelectParser.SelectListContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBinaryExpression(SelectParser.BinaryExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSelectElement(SelectParser.SelectElementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitDecimalExpression(SelectParser.DecimalExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitOrFilterExpr(SelectParser.OrFilterExprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBoolExpression(SelectParser.BoolExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSimpleFilter(SelectParser.SimpleFilterContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIdentifierExpression(SelectParser.IdentifierExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitParenExpr(SelectParser.ParenExprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNotExpression(SelectParser.NotExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAndFilterExpr(SelectParser.AndFilterExprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParenExpression(SelectParser.ParenExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBasicFilter(SelectParser.BasicFilterContext ctx) { return visitChildren(ctx); }
+	@Override public T visitComparatorExpression(SelectParser.ComparatorExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitInopFilter(SelectParser.InopFilterContext ctx) { return visitChildren(ctx); }
+	@Override public T visitComparator(SelectParser.ComparatorContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLikeFilter(SelectParser.LikeFilterContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBinary(SelectParser.BinaryContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStringLiteral(SelectParser.StringLiteralContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitIntLiteral(SelectParser.IntLiteralContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitFloatLiteral(SelectParser.FloatLiteralContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitBoolLiteral(SelectParser.BoolLiteralContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitLiteralColName(SelectParser.LiteralColNameContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitLiteralListExpr(SelectParser.LiteralListExprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBool(SelectParser.BoolContext ctx) { return visitChildren(ctx); }
 }

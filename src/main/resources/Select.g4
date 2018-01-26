@@ -1,57 +1,43 @@
 grammar Select;
 
+parse
+ : expression EOF
+ ;
 
-query           : SELECT select_list WHERE filter_expr              #QueryExpression
-                ;
+expression
+ : LPAREN expression RPAREN                       #parenExpression
+ | NOT expression                                 #notExpression
+ | left=expression op=comparator right=expression #comparatorExpression
+ | left=expression op=binary right=expression     #binaryExpression
+ | bool                                           #boolExpression
+ | IDENTIFIER                                     #identifierExpression
+ | DECIMAL                                        #decimalExpression
+ ;
 
-select_list     : select_element (',' select_element)*              #SelectList
-                ;
+comparator
+ : GT | GE | LT | LE | EQ
+ ;
 
-select_element  : COL_N_WSTAR                                       #SelectElement
-                ;
+binary
+ : AND | OR
+ ;
 
-filter_expr     : filter_expr AND filter_expr                       #AndFilterExpr
-                | filter_expr OR filter_expr                        #OrFilterExpr
-                | OPENPAREN filter_expr CLOSEPAREN                  #ParenExpr
-                | filter                                            #SimpleFilter
-                ;
+bool
+ : TRUE | FALSE
+ ;
 
-filter          : literal OP literal                                #BasicFilter
-                | COL_NAME INOP literal_list                        #InopFilter
-                | COL_NAME LIKE WORD                                #LikeFilter
-                ;
-
-literal         : SLITERAL                                          #StringLiteral
-                | INT                                               #IntLiteral
-                | FLOAT                                             #FloatLiteral
-                | BOOL                                              #BoolLiteral
-                | COL_NAME                                          #LiteralColName
-                ;
-
-literal_list    : OPENPAREN SLITERAL (',' SLITERAL)* CLOSEPAREN      #LiteralListExpr
-                ;
-
-SELECT          : 'select';
-WHERE           : 'where';
-COL_NAME        : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-')*;
-COL_N_WSTAR     : ('a'..'z'|'A'..'Z'|'_'|'*') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-'|'*')*;
-
-DIGIT           : ('0'..'9');
-INT             : '-'? DIGIT+;
-FLOAT           : '-'? DIGIT+ '.' DIGIT+;
-BOOL            : ('true'|'false');
-SLITERAL        : '\'' WORD '\'';
-OP              : ('>'|'<'|'>='|'<='|'='|'!=');
-
-ESC             : [ \t\n\r]+ -> skip;
-WORD            : ~[ \t\r\n")(=,]+;
-OPENPAREN       : '(';
-CLOSEPAREN      : ')';
-
-OR              : 'or';
-AND             : 'and';
-INOP            : 'in';
-LIKE            : 'like';
-
-fragment
-SGUTS           : (ESC | ~('\\' | '"'))*;
+AND        : 'AND' ;
+OR         : 'OR' ;
+NOT        : 'NOT';
+TRUE       : 'TRUE' ;
+FALSE      : 'FALSE' ;
+GT         : '>' ;
+GE         : '>=' ;
+LT         : '<' ;
+LE         : '<=' ;
+EQ         : '=' ;
+LPAREN     : '(' ;
+RPAREN     : ')' ;
+DECIMAL    : '-'? [0-9]+ ( '.' [0-9]+ )? ;
+IDENTIFIER : [a-zA-Z_] [a-zA-Z_0-9]* ;
+WS         : [ \r\t\u000C\n]+ -> skip;

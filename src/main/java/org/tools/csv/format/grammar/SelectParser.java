@@ -17,25 +17,22 @@ public class SelectParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, SELECT=2, WHERE=3, COL_NAME=4, COL_N_WSTAR=5, DIGIT=6, INT=7, 
-		FLOAT=8, BOOL=9, SLITERAL=10, OP=11, ESC=12, WORD=13, OPENPAREN=14, CLOSEPAREN=15, 
-		OR=16, AND=17, INOP=18, LIKE=19;
+		AND=1, OR=2, NOT=3, TRUE=4, FALSE=5, GT=6, GE=7, LT=8, LE=9, EQ=10, LPAREN=11, 
+		RPAREN=12, DECIMAL=13, IDENTIFIER=14, WS=15;
 	public static final int
-		RULE_query = 0, RULE_select_list = 1, RULE_select_element = 2, RULE_filter_expr = 3, 
-		RULE_filter = 4, RULE_literal = 5, RULE_literal_list = 6;
+		RULE_parse = 0, RULE_expression = 1, RULE_comparator = 2, RULE_binary = 3, 
+		RULE_bool = 4;
 	public static final String[] ruleNames = {
-		"query", "select_list", "select_element", "filter_expr", "filter", "literal", 
-		"literal_list"
+		"parse", "expression", "comparator", "binary", "bool"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "','", "'select'", "'where'", null, null, null, null, null, null, 
-		null, null, null, null, "'('", "')'", "'or'", "'and'", "'in'", "'like'"
+		null, "'AND'", "'OR'", "'NOT'", "'TRUE'", "'FALSE'", "'>'", "'>='", "'<'", 
+		"'<='", "'='", "'('", "')'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, "SELECT", "WHERE", "COL_NAME", "COL_N_WSTAR", "DIGIT", "INT", 
-		"FLOAT", "BOOL", "SLITERAL", "OP", "ESC", "WORD", "OPENPAREN", "CLOSEPAREN", 
-		"OR", "AND", "INOP", "LIKE"
+		null, "AND", "OR", "NOT", "TRUE", "FALSE", "GT", "GE", "LT", "LE", "EQ", 
+		"LPAREN", "RPAREN", "DECIMAL", "IDENTIFIER", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -86,49 +83,32 @@ public class SelectParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
-	public static class QueryContext extends ParserRuleContext {
-		public QueryContext(ParserRuleContext parent, int invokingState) {
+	public static class ParseContext extends ParserRuleContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public TerminalNode EOF() { return getToken(SelectParser.EOF, 0); }
+		public ParseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_query; }
-	 
-		public QueryContext() { }
-		public void copyFrom(QueryContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class QueryExpressionContext extends QueryContext {
-		public TerminalNode SELECT() { return getToken(SelectParser.SELECT, 0); }
-		public Select_listContext select_list() {
-			return getRuleContext(Select_listContext.class,0);
-		}
-		public TerminalNode WHERE() { return getToken(SelectParser.WHERE, 0); }
-		public Filter_exprContext filter_expr() {
-			return getRuleContext(Filter_exprContext.class,0);
-		}
-		public QueryExpressionContext(QueryContext ctx) { copyFrom(ctx); }
+		@Override public int getRuleIndex() { return RULE_parse; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitQueryExpression(this);
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitParse(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final QueryContext query() throws RecognitionException {
-		QueryContext _localctx = new QueryContext(_ctx, getState());
-		enterRule(_localctx, 0, RULE_query);
+	public final ParseContext parse() throws RecognitionException {
+		ParseContext _localctx = new ParseContext(_ctx, getState());
+		enterRule(_localctx, 0, RULE_parse);
 		try {
-			_localctx = new QueryExpressionContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(14);
-			match(SELECT);
-			setState(15);
-			select_list();
-			setState(16);
-			match(WHERE);
-			setState(17);
-			filter_expr(0);
+			setState(10);
+			expression(0);
+			setState(11);
+			match(EOF);
 			}
 		}
 		catch (RecognitionException re) {
@@ -142,268 +122,228 @@ public class SelectParser extends Parser {
 		return _localctx;
 	}
 
-	public static class Select_listContext extends ParserRuleContext {
-		public Select_listContext(ParserRuleContext parent, int invokingState) {
+	public static class ExpressionContext extends ParserRuleContext {
+		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_select_list; }
+		@Override public int getRuleIndex() { return RULE_expression; }
 	 
-		public Select_listContext() { }
-		public void copyFrom(Select_listContext ctx) {
+		public ExpressionContext() { }
+		public void copyFrom(ExpressionContext ctx) {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class SelectListContext extends Select_listContext {
-		public List<Select_elementContext> select_element() {
-			return getRuleContexts(Select_elementContext.class);
+	public static class BinaryExpressionContext extends ExpressionContext {
+		public ExpressionContext left;
+		public BinaryContext op;
+		public ExpressionContext right;
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
 		}
-		public Select_elementContext select_element(int i) {
-			return getRuleContext(Select_elementContext.class,i);
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
 		}
-		public SelectListContext(Select_listContext ctx) { copyFrom(ctx); }
+		public BinaryContext binary() {
+			return getRuleContext(BinaryContext.class,0);
+		}
+		public BinaryExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitSelectList(this);
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitBinaryExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class DecimalExpressionContext extends ExpressionContext {
+		public TerminalNode DECIMAL() { return getToken(SelectParser.DECIMAL, 0); }
+		public DecimalExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitDecimalExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class BoolExpressionContext extends ExpressionContext {
+		public BoolContext bool() {
+			return getRuleContext(BoolContext.class,0);
+		}
+		public BoolExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitBoolExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class IdentifierExpressionContext extends ExpressionContext {
+		public TerminalNode IDENTIFIER() { return getToken(SelectParser.IDENTIFIER, 0); }
+		public IdentifierExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitIdentifierExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class NotExpressionContext extends ExpressionContext {
+		public TerminalNode NOT() { return getToken(SelectParser.NOT, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public NotExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitNotExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ParenExpressionContext extends ExpressionContext {
+		public TerminalNode LPAREN() { return getToken(SelectParser.LPAREN, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public TerminalNode RPAREN() { return getToken(SelectParser.RPAREN, 0); }
+		public ParenExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitParenExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ComparatorExpressionContext extends ExpressionContext {
+		public ExpressionContext left;
+		public ComparatorContext op;
+		public ExpressionContext right;
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
+		}
+		public ComparatorContext comparator() {
+			return getRuleContext(ComparatorContext.class,0);
+		}
+		public ComparatorExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitComparatorExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final Select_listContext select_list() throws RecognitionException {
-		Select_listContext _localctx = new Select_listContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_select_list);
-		int _la;
-		try {
-			_localctx = new SelectListContext(_localctx);
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(19);
-			select_element();
-			setState(24);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==T__0) {
-				{
-				{
-				setState(20);
-				match(T__0);
-				setState(21);
-				select_element();
-				}
-				}
-				setState(26);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
+	public final ExpressionContext expression() throws RecognitionException {
+		return expression(0);
 	}
 
-	public static class Select_elementContext extends ParserRuleContext {
-		public Select_elementContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_select_element; }
-	 
-		public Select_elementContext() { }
-		public void copyFrom(Select_elementContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class SelectElementContext extends Select_elementContext {
-		public TerminalNode COL_N_WSTAR() { return getToken(SelectParser.COL_N_WSTAR, 0); }
-		public SelectElementContext(Select_elementContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitSelectElement(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final Select_elementContext select_element() throws RecognitionException {
-		Select_elementContext _localctx = new Select_elementContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_select_element);
-		try {
-			_localctx = new SelectElementContext(_localctx);
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(27);
-			match(COL_N_WSTAR);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class Filter_exprContext extends ParserRuleContext {
-		public Filter_exprContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_filter_expr; }
-	 
-		public Filter_exprContext() { }
-		public void copyFrom(Filter_exprContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class OrFilterExprContext extends Filter_exprContext {
-		public List<Filter_exprContext> filter_expr() {
-			return getRuleContexts(Filter_exprContext.class);
-		}
-		public Filter_exprContext filter_expr(int i) {
-			return getRuleContext(Filter_exprContext.class,i);
-		}
-		public TerminalNode OR() { return getToken(SelectParser.OR, 0); }
-		public OrFilterExprContext(Filter_exprContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitOrFilterExpr(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class SimpleFilterContext extends Filter_exprContext {
-		public FilterContext filter() {
-			return getRuleContext(FilterContext.class,0);
-		}
-		public SimpleFilterContext(Filter_exprContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitSimpleFilter(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class ParenExprContext extends Filter_exprContext {
-		public TerminalNode OPENPAREN() { return getToken(SelectParser.OPENPAREN, 0); }
-		public Filter_exprContext filter_expr() {
-			return getRuleContext(Filter_exprContext.class,0);
-		}
-		public TerminalNode CLOSEPAREN() { return getToken(SelectParser.CLOSEPAREN, 0); }
-		public ParenExprContext(Filter_exprContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitParenExpr(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class AndFilterExprContext extends Filter_exprContext {
-		public List<Filter_exprContext> filter_expr() {
-			return getRuleContexts(Filter_exprContext.class);
-		}
-		public Filter_exprContext filter_expr(int i) {
-			return getRuleContext(Filter_exprContext.class,i);
-		}
-		public TerminalNode AND() { return getToken(SelectParser.AND, 0); }
-		public AndFilterExprContext(Filter_exprContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitAndFilterExpr(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final Filter_exprContext filter_expr() throws RecognitionException {
-		return filter_expr(0);
-	}
-
-	private Filter_exprContext filter_expr(int _p) throws RecognitionException {
+	private ExpressionContext expression(int _p) throws RecognitionException {
 		ParserRuleContext _parentctx = _ctx;
 		int _parentState = getState();
-		Filter_exprContext _localctx = new Filter_exprContext(_ctx, _parentState);
-		Filter_exprContext _prevctx = _localctx;
-		int _startState = 6;
-		enterRecursionRule(_localctx, 6, RULE_filter_expr, _p);
+		ExpressionContext _localctx = new ExpressionContext(_ctx, _parentState);
+		ExpressionContext _prevctx = _localctx;
+		int _startState = 2;
+		enterRecursionRule(_localctx, 2, RULE_expression, _p);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(35);
+			setState(23);
 			switch (_input.LA(1)) {
-			case OPENPAREN:
+			case NOT:
 				{
-				_localctx = new ParenExprContext(_localctx);
+				_localctx = new NotExpressionContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(30);
-				match(OPENPAREN);
-				setState(31);
-				filter_expr(0);
-				setState(32);
-				match(CLOSEPAREN);
+				setState(14);
+				match(NOT);
+				setState(15);
+				expression(6);
 				}
 				break;
-			case COL_NAME:
-			case INT:
-			case FLOAT:
-			case BOOL:
-			case SLITERAL:
+			case LPAREN:
 				{
-				_localctx = new SimpleFilterContext(_localctx);
+				_localctx = new ParenExpressionContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(34);
-				filter();
+				setState(16);
+				match(LPAREN);
+				setState(17);
+				expression(0);
+				setState(18);
+				match(RPAREN);
+				}
+				break;
+			case TRUE:
+			case FALSE:
+				{
+				_localctx = new BoolExpressionContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(20);
+				bool();
+				}
+				break;
+			case IDENTIFIER:
+				{
+				_localctx = new IdentifierExpressionContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(21);
+				match(IDENTIFIER);
+				}
+				break;
+			case DECIMAL:
+				{
+				_localctx = new DecimalExpressionContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(22);
+				match(DECIMAL);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(45);
+			setState(35);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(43);
-					switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
+					setState(33);
+					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
-						_localctx = new AndFilterExprContext(new Filter_exprContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_filter_expr);
-						setState(37);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(38);
-						match(AND);
-						setState(39);
-						filter_expr(5);
+						_localctx = new ComparatorExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((ComparatorExpressionContext)_localctx).left = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(25);
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
+						setState(26);
+						((ComparatorExpressionContext)_localctx).op = comparator();
+						setState(27);
+						((ComparatorExpressionContext)_localctx).right = expression(6);
 						}
 						break;
 					case 2:
 						{
-						_localctx = new OrFilterExprContext(new Filter_exprContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_filter_expr);
-						setState(40);
-						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(41);
-						match(OR);
-						setState(42);
-						filter_expr(4);
+						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((BinaryExpressionContext)_localctx).left = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(29);
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+						setState(30);
+						((BinaryExpressionContext)_localctx).op = binary();
+						setState(31);
+						((BinaryExpressionContext)_localctx).right = expression(5);
 						}
 						break;
 					}
 					} 
 				}
-				setState(47);
+				setState(37);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			}
 			}
 		}
@@ -418,286 +358,119 @@ public class SelectParser extends Parser {
 		return _localctx;
 	}
 
-	public static class FilterContext extends ParserRuleContext {
-		public FilterContext(ParserRuleContext parent, int invokingState) {
+	public static class ComparatorContext extends ParserRuleContext {
+		public TerminalNode GT() { return getToken(SelectParser.GT, 0); }
+		public TerminalNode GE() { return getToken(SelectParser.GE, 0); }
+		public TerminalNode LT() { return getToken(SelectParser.LT, 0); }
+		public TerminalNode LE() { return getToken(SelectParser.LE, 0); }
+		public TerminalNode EQ() { return getToken(SelectParser.EQ, 0); }
+		public ComparatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_filter; }
-	 
-		public FilterContext() { }
-		public void copyFrom(FilterContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class LikeFilterContext extends FilterContext {
-		public TerminalNode COL_NAME() { return getToken(SelectParser.COL_NAME, 0); }
-		public TerminalNode LIKE() { return getToken(SelectParser.LIKE, 0); }
-		public TerminalNode WORD() { return getToken(SelectParser.WORD, 0); }
-		public LikeFilterContext(FilterContext ctx) { copyFrom(ctx); }
+		@Override public int getRuleIndex() { return RULE_comparator; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitLikeFilter(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class InopFilterContext extends FilterContext {
-		public TerminalNode COL_NAME() { return getToken(SelectParser.COL_NAME, 0); }
-		public TerminalNode INOP() { return getToken(SelectParser.INOP, 0); }
-		public Literal_listContext literal_list() {
-			return getRuleContext(Literal_listContext.class,0);
-		}
-		public InopFilterContext(FilterContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitInopFilter(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class BasicFilterContext extends FilterContext {
-		public List<LiteralContext> literal() {
-			return getRuleContexts(LiteralContext.class);
-		}
-		public LiteralContext literal(int i) {
-			return getRuleContext(LiteralContext.class,i);
-		}
-		public TerminalNode OP() { return getToken(SelectParser.OP, 0); }
-		public BasicFilterContext(FilterContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitBasicFilter(this);
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitComparator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final FilterContext filter() throws RecognitionException {
-		FilterContext _localctx = new FilterContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_filter);
-		try {
-			setState(58);
-			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
-			case 1:
-				_localctx = new BasicFilterContext(_localctx);
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(48);
-				literal();
-				setState(49);
-				match(OP);
-				setState(50);
-				literal();
-				}
-				break;
-			case 2:
-				_localctx = new InopFilterContext(_localctx);
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(52);
-				match(COL_NAME);
-				setState(53);
-				match(INOP);
-				setState(54);
-				literal_list();
-				}
-				break;
-			case 3:
-				_localctx = new LikeFilterContext(_localctx);
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(55);
-				match(COL_NAME);
-				setState(56);
-				match(LIKE);
-				setState(57);
-				match(WORD);
-				}
-				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class LiteralContext extends ParserRuleContext {
-		public LiteralContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_literal; }
-	 
-		public LiteralContext() { }
-		public void copyFrom(LiteralContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class StringLiteralContext extends LiteralContext {
-		public TerminalNode SLITERAL() { return getToken(SelectParser.SLITERAL, 0); }
-		public StringLiteralContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitStringLiteral(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class BoolLiteralContext extends LiteralContext {
-		public TerminalNode BOOL() { return getToken(SelectParser.BOOL, 0); }
-		public BoolLiteralContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitBoolLiteral(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class FloatLiteralContext extends LiteralContext {
-		public TerminalNode FLOAT() { return getToken(SelectParser.FLOAT, 0); }
-		public FloatLiteralContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitFloatLiteral(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class IntLiteralContext extends LiteralContext {
-		public TerminalNode INT() { return getToken(SelectParser.INT, 0); }
-		public IntLiteralContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitIntLiteral(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class LiteralColNameContext extends LiteralContext {
-		public TerminalNode COL_NAME() { return getToken(SelectParser.COL_NAME, 0); }
-		public LiteralColNameContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitLiteralColName(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final LiteralContext literal() throws RecognitionException {
-		LiteralContext _localctx = new LiteralContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_literal);
-		try {
-			setState(65);
-			switch (_input.LA(1)) {
-			case SLITERAL:
-				_localctx = new StringLiteralContext(_localctx);
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(60);
-				match(SLITERAL);
-				}
-				break;
-			case INT:
-				_localctx = new IntLiteralContext(_localctx);
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(61);
-				match(INT);
-				}
-				break;
-			case FLOAT:
-				_localctx = new FloatLiteralContext(_localctx);
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(62);
-				match(FLOAT);
-				}
-				break;
-			case BOOL:
-				_localctx = new BoolLiteralContext(_localctx);
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(63);
-				match(BOOL);
-				}
-				break;
-			case COL_NAME:
-				_localctx = new LiteralColNameContext(_localctx);
-				enterOuterAlt(_localctx, 5);
-				{
-				setState(64);
-				match(COL_NAME);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class Literal_listContext extends ParserRuleContext {
-		public Literal_listContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_literal_list; }
-	 
-		public Literal_listContext() { }
-		public void copyFrom(Literal_listContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class LiteralListExprContext extends Literal_listContext {
-		public TerminalNode OPENPAREN() { return getToken(SelectParser.OPENPAREN, 0); }
-		public List<TerminalNode> SLITERAL() { return getTokens(SelectParser.SLITERAL); }
-		public TerminalNode SLITERAL(int i) {
-			return getToken(SelectParser.SLITERAL, i);
-		}
-		public TerminalNode CLOSEPAREN() { return getToken(SelectParser.CLOSEPAREN, 0); }
-		public LiteralListExprContext(Literal_listContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitLiteralListExpr(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final Literal_listContext literal_list() throws RecognitionException {
-		Literal_listContext _localctx = new Literal_listContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_literal_list);
+	public final ComparatorContext comparator() throws RecognitionException {
+		ComparatorContext _localctx = new ComparatorContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_comparator);
 		int _la;
 		try {
-			_localctx = new LiteralListExprContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(67);
-			match(OPENPAREN);
-			setState(68);
-			match(SLITERAL);
-			setState(73);
-			_errHandler.sync(this);
+			setState(38);
 			_la = _input.LA(1);
-			while (_la==T__0) {
-				{
-				{
-				setState(69);
-				match(T__0);
-				setState(70);
-				match(SLITERAL);
-				}
-				}
-				setState(75);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << GT) | (1L << GE) | (1L << LT) | (1L << LE) | (1L << EQ))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			} else {
+				consume();
 			}
-			setState(76);
-			match(CLOSEPAREN);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class BinaryContext extends ParserRuleContext {
+		public TerminalNode AND() { return getToken(SelectParser.AND, 0); }
+		public TerminalNode OR() { return getToken(SelectParser.OR, 0); }
+		public BinaryContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_binary; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitBinary(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final BinaryContext binary() throws RecognitionException {
+		BinaryContext _localctx = new BinaryContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_binary);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(40);
+			_la = _input.LA(1);
+			if ( !(_la==AND || _la==OR) ) {
+			_errHandler.recoverInline(this);
+			} else {
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class BoolContext extends ParserRuleContext {
+		public TerminalNode TRUE() { return getToken(SelectParser.TRUE, 0); }
+		public TerminalNode FALSE() { return getToken(SelectParser.FALSE, 0); }
+		public BoolContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_bool; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SelectVisitor ) return ((SelectVisitor<? extends T>)visitor).visitBool(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final BoolContext bool() throws RecognitionException {
+		BoolContext _localctx = new BoolContext(_ctx, getState());
+		enterRule(_localctx, 8, RULE_bool);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(42);
+			_la = _input.LA(1);
+			if ( !(_la==TRUE || _la==FALSE) ) {
+			_errHandler.recoverInline(this);
+			} else {
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -713,42 +486,35 @@ public class SelectParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 3:
-			return filter_expr_sempred((Filter_exprContext)_localctx, predIndex);
+		case 1:
+			return expression_sempred((ExpressionContext)_localctx, predIndex);
 		}
 		return true;
 	}
-	private boolean filter_expr_sempred(Filter_exprContext _localctx, int predIndex) {
+	private boolean expression_sempred(ExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 4);
+			return precpred(_ctx, 5);
 		case 1:
-			return precpred(_ctx, 3);
+			return precpred(_ctx, 4);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\25Q\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\3\2\3\2\3\2\3\2\3\3\3\3"+
-		"\3\3\7\3\31\n\3\f\3\16\3\34\13\3\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\5\5&"+
-		"\n\5\3\5\3\5\3\5\3\5\3\5\3\5\7\5.\n\5\f\5\16\5\61\13\5\3\6\3\6\3\6\3\6"+
-		"\3\6\3\6\3\6\3\6\3\6\3\6\5\6=\n\6\3\7\3\7\3\7\3\7\3\7\5\7D\n\7\3\b\3\b"+
-		"\3\b\3\b\7\bJ\n\b\f\b\16\bM\13\b\3\b\3\b\3\b\2\3\b\t\2\4\6\b\n\f\16\2"+
-		"\2T\2\20\3\2\2\2\4\25\3\2\2\2\6\35\3\2\2\2\b%\3\2\2\2\n<\3\2\2\2\fC\3"+
-		"\2\2\2\16E\3\2\2\2\20\21\7\4\2\2\21\22\5\4\3\2\22\23\7\5\2\2\23\24\5\b"+
-		"\5\2\24\3\3\2\2\2\25\32\5\6\4\2\26\27\7\3\2\2\27\31\5\6\4\2\30\26\3\2"+
-		"\2\2\31\34\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\5\3\2\2\2\34\32\3\2"+
-		"\2\2\35\36\7\7\2\2\36\7\3\2\2\2\37 \b\5\1\2 !\7\20\2\2!\"\5\b\5\2\"#\7"+
-		"\21\2\2#&\3\2\2\2$&\5\n\6\2%\37\3\2\2\2%$\3\2\2\2&/\3\2\2\2\'(\f\6\2\2"+
-		"()\7\23\2\2).\5\b\5\7*+\f\5\2\2+,\7\22\2\2,.\5\b\5\6-\'\3\2\2\2-*\3\2"+
-		"\2\2.\61\3\2\2\2/-\3\2\2\2/\60\3\2\2\2\60\t\3\2\2\2\61/\3\2\2\2\62\63"+
-		"\5\f\7\2\63\64\7\r\2\2\64\65\5\f\7\2\65=\3\2\2\2\66\67\7\6\2\2\678\7\24"+
-		"\2\28=\5\16\b\29:\7\6\2\2:;\7\25\2\2;=\7\17\2\2<\62\3\2\2\2<\66\3\2\2"+
-		"\2<9\3\2\2\2=\13\3\2\2\2>D\7\f\2\2?D\7\t\2\2@D\7\n\2\2AD\7\13\2\2BD\7"+
-		"\6\2\2C>\3\2\2\2C?\3\2\2\2C@\3\2\2\2CA\3\2\2\2CB\3\2\2\2D\r\3\2\2\2EF"+
-		"\7\20\2\2FK\7\f\2\2GH\7\3\2\2HJ\7\f\2\2IG\3\2\2\2JM\3\2\2\2KI\3\2\2\2"+
-		"KL\3\2\2\2LN\3\2\2\2MK\3\2\2\2NO\7\21\2\2O\17\3\2\2\2\t\32%-/<CK";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\21/\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
+		"\3\3\3\3\5\3\32\n\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3$\n\3\f\3\16\3"+
+		"\'\13\3\3\4\3\4\3\5\3\5\3\6\3\6\3\6\2\3\4\7\2\4\6\b\n\2\5\3\2\b\f\3\2"+
+		"\3\4\3\2\6\7/\2\f\3\2\2\2\4\31\3\2\2\2\6(\3\2\2\2\b*\3\2\2\2\n,\3\2\2"+
+		"\2\f\r\5\4\3\2\r\16\7\2\2\3\16\3\3\2\2\2\17\20\b\3\1\2\20\21\7\5\2\2\21"+
+		"\32\5\4\3\b\22\23\7\r\2\2\23\24\5\4\3\2\24\25\7\16\2\2\25\32\3\2\2\2\26"+
+		"\32\5\n\6\2\27\32\7\20\2\2\30\32\7\17\2\2\31\17\3\2\2\2\31\22\3\2\2\2"+
+		"\31\26\3\2\2\2\31\27\3\2\2\2\31\30\3\2\2\2\32%\3\2\2\2\33\34\f\7\2\2\34"+
+		"\35\5\6\4\2\35\36\5\4\3\b\36$\3\2\2\2\37 \f\6\2\2 !\5\b\5\2!\"\5\4\3\7"+
+		"\"$\3\2\2\2#\33\3\2\2\2#\37\3\2\2\2$\'\3\2\2\2%#\3\2\2\2%&\3\2\2\2&\5"+
+		"\3\2\2\2\'%\3\2\2\2()\t\2\2\2)\7\3\2\2\2*+\t\3\2\2+\t\3\2\2\2,-\t\4\2"+
+		"\2-\13\3\2\2\2\5\31#%";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

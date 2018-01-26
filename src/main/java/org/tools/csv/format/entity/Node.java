@@ -5,20 +5,20 @@ import java.util.List;
 
 import org.tools.csv.format.entity.leafnode.LeafNode;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Wither;
 
 @Data
+@Wither
+@AllArgsConstructor
+@NoArgsConstructor
 public class Node {
 
     private NodeType op;
     
-    private Node lhs;
+    private Object lhs;
     
-    private Node rhs;
-    
-    private LeafNode lhsLeaf;
-    
-    private LeafNode rhsLeaf;
-    
-    private List<String> rhsList = new ArrayList<String>();
+    private Object rhs;
 }

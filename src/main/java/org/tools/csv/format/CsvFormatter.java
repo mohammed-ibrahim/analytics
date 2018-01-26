@@ -24,12 +24,7 @@ public class CsvFormatter {
 
     public static void run(String[] args) throws Exception {
         String str = "";
-        str = "select * where id = '10' or name = 'hello'";
-
-//        str += "    # text";
-//        if (args.length > 0) {
-//            str = args[0];
-//        }
+        str = "a = b OR (col1 = 33 AND col2 = 55)";
 
         ANTLRInputStream input = new ANTLRInputStream(str);
         SelectLexer selectLexer = new SelectLexer(input);
@@ -37,10 +32,10 @@ public class CsvFormatter {
         CommonTokenStream tokens = new CommonTokenStream(selectLexer);
         SelectParser selectParser = new SelectParser(tokens);
         selectParser.setErrorHandler(new BailErrorStrategy());
-        ParseTree tree = selectParser.query();
+        ParseTree tree = selectParser.parse();
         Analyzer analyzer = new Analyzer();
-        Format fmt = (Format) analyzer.visit(tree);
+        Object obj = analyzer.visit(tree);
         ObjectMapper jsonMapper = new ObjectMapper();
-        System.out.println(jsonMapper.writeValueAsString(fmt));
+        System.out.println(jsonMapper.writeValueAsString(obj));
     }
 }
