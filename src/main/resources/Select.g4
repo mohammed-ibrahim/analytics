@@ -1,7 +1,7 @@
 grammar Select;
 
 parse
- : expression EOF
+ : 'select' 'where' expression EOF
  ;
 
 expression
