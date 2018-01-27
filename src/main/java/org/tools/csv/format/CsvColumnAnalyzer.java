@@ -3,11 +3,7 @@ package org.tools.csv.format;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.tools.csv.utils.Utility;
 
 import lombok.Data;
 
@@ -67,10 +63,11 @@ public class CsvColumnAnalyzer {
     }
 
     private boolean matches(String pattern, String value) {
-        String derivedPattern = pattern.replace("*", ".*");
-        Pattern compiler = Pattern.compile(derivedPattern);
-        Matcher matcher = compiler.matcher(value);
-
-        return matcher.find();
+        return value.matches(pattern.replace("*", ".*"));
+//        String derivedPattern = pattern.replace("*", ".*");
+//        Pattern compiler = Pattern.compile(derivedPattern);
+//        Matcher matcher = compiler.matcher(value);
+//
+//        return matcher.find();
     }
 }

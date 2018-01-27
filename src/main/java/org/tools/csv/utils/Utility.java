@@ -2,6 +2,7 @@ package org.tools.csv.utils;
 
 import java.io.FileReader;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Random;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -46,5 +47,16 @@ public class Utility {
         }
 
         return false;
+    }
+
+    public static Optional<Double> safeParse(String input) {
+        try {
+
+            Double dbl = Double.parseDouble(input);
+            return Optional.of(dbl);
+        } catch (Exception e) {
+
+            return Optional.empty();
+        }
     }
 }
