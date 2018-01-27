@@ -1,5 +1,7 @@
 package org.tools.csv.format.entity;
 
+import java.util.Arrays;
+
 public class ConsolePrinter implements Printer {
 
     @Override
@@ -10,8 +12,9 @@ public class ConsolePrinter implements Printer {
 
     @Override
     public void nextLine(String[] line) {
-        // TODO Auto-generated method stub
 
+        Arrays.asList(line).forEach(a -> System.out.print(a + ","));
+        System.out.println("");
     }
 
 }

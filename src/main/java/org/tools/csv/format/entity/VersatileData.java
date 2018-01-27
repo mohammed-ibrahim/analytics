@@ -75,7 +75,7 @@ public class VersatileData {
             throw new RuntimeException(this.type.toString() + " cannot be compared to: " + other.getType().toString());
         }
 
-        if (!this.type.equals(VersatileDataType.NULL) || other.getType().equals(VersatileDataType.NULL)) {
+        if (this.type.equals(VersatileDataType.NULL) || other.getType().equals(VersatileDataType.NULL)) {
 
             throw new RuntimeException("null types cannot be compared.");
         }

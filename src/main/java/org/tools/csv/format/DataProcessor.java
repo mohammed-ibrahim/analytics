@@ -7,6 +7,7 @@ import org.tools.csv.format.entity.ConsolePrinter;
 import org.tools.csv.format.entity.Format;
 import org.tools.csv.format.entity.Printer;
 import org.tools.csv.format.entity.ProcessMetadata;
+import org.tools.csv.format.expr.ExpressionEvaluator;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -19,6 +20,8 @@ public class DataProcessor {
             ProcessMetadata metadata) {
 
         String[] outputArray = new String[metadata.getReturnColumnIndexes().size()];
+
+        ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator(format.getNode(), metadata);
 
         try (CSVReader reader = new CSVReader(new FileReader(inputFile.toFile()));
                 Printer printer = getPrinter(outputFile)) {
@@ -33,6 +36,17 @@ public class DataProcessor {
                 //1: If matcher.matches then #2 else continue.
                 //2: Copy required columns from inputfile to outputArray
                 //3: Send the array to printer
+
+                if (expressionEvaluator.evaluate(line)) {
+
+                    Integer index = 0;
+
+                    for (int i=0; i<metadata.getReturnColumnIndexes().size(); i++) {
+                        outputArray[i] = line[metadata.getReturnColumnIndexes().get(i)];
+                    }
+
+                    printer.nextLine(outputArray);
+                }
             }
 
         } catch (Exception e) {

@@ -28,6 +28,10 @@ public class CsvFormatterCliHandler {
         OptionDetails oo = new OptionDetails("output", "o", "location of output file", true, false);
         OptionDetails exp = new OptionDetails("expr", "e", "sql-like select c1,c2 where c3='soem_value'", true, true);
 
+        options.addOption(io.getOption());
+        options.addOption(oo.getOption());
+        options.addOption(exp.getOption());
+
         GnuParser parser = new GnuParser();
         CommandLine cli = null;
 

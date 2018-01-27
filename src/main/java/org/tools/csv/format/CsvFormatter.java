@@ -14,6 +14,8 @@ import org.tools.csv.format.grammar.SelectParser;
 import org.tools.csv.utils.Utility;
 import org.tools.csv.validation.CsvFormatterCliHandler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class CsvFormatter {
 
     public static void main(String[] args) {
@@ -48,7 +50,7 @@ public class CsvFormatter {
     }
 
     public Format parseExpression(String expression) throws Exception {
-        expression = "select hello,*v1*test,*v2 where 'first_name' = 'last_name' OR (col1 = 33 AND col2 = 55) OR col5 is null";
+        //expression = "select hello,*v1*test,*v2 where 'first_name' = 'last_name' OR (col1 = 33 AND col2 = 55) OR col5 is null";
 
         ANTLRInputStream input = new ANTLRInputStream(expression);
         SelectLexer selectLexer = new SelectLexer(input);
@@ -64,8 +66,8 @@ public class CsvFormatter {
         ParseTree tree = selectParser.parse();
         Analyzer analyzer = new Analyzer();
         Format format = (Format)analyzer.visit(tree);
-        //ObjectMapper jsonMapper = new ObjectMapper();
-        //System.out.println(jsonMapper.writeValueAsString(obj));
+        ObjectMapper jsonMapper = new ObjectMapper();
+        System.out.println(jsonMapper.writeValueAsString(format));
         return format;
     }
 }
