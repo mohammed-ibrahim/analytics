@@ -19,7 +19,7 @@ public class DataProcessor {
             Path inputFile,
             Path outputFile,
             Format format,
-            ProcessMetadata metadata) {
+            ProcessMetadata metadata) throws Exception {
 
         String[] outputArray = new String[metadata.getReturnColumnIndexes().size()];
 
@@ -60,10 +60,6 @@ public class DataProcessor {
 
             String info = String.format("Rows: %d Time-taken: %s", numResults, timer.end().toString());
             System.out.println(info);
-
-        } catch (Exception e) {
-
-            throw new RuntimeException(e);
         }
     }
 

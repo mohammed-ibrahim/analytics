@@ -10,7 +10,7 @@ public class ConsolePrinter implements Printer {
     }
 
     @Override
-    public void nextLine(String[] line) {
+    public void nextLine(String[] line) throws Exception {
 
         System.out.println(StringUtils.join(line, ","));
     }

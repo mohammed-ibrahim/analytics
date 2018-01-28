@@ -1,5 +1,6 @@
 package org.tools.csv.format;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,13 +44,16 @@ public class CsvFormatter {
                     format,
                     metadata);
 
+        } catch (FileNotFoundException fne) {
+
+            System.out.println(fne.getMessage());
         } catch (ParseFailureException pfe) {
 
             System.out.println(getPfeMessage(pfe));
         } catch (Exception e) {
 
-            System.out.print(e.getMessage());
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            //e.printStackTrace();
         }
     }
 
