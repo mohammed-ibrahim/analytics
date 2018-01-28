@@ -28,9 +28,8 @@ public class SelectParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'select'", "'where'", "','", "'AND'", "'OR'", "'NOT'", "'TRUE'", 
-		"'FALSE'", "'>'", "'>='", "'<'", "'<='", "'='", "'!='", "'is'", "'('", 
-		"')'"
+		null, "'select'", "'where'", "','", null, null, null, null, null, "'>'", 
+		"'>='", "'<'", "'<='", "'='", "'!='", "'is'", "'('", "')'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, "AND", "OR", "NOT", "TRUE", "FALSE", "GT", "GE", 

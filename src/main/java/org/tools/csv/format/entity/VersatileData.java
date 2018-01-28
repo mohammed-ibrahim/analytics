@@ -1,8 +1,10 @@
 package org.tools.csv.format.entity;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.tools.csv.format.entity.leafnode.ColumnNameLeafNode;
+import org.tools.csv.utils.Utility;
 
 import lombok.Data;
 
@@ -56,8 +58,13 @@ public class VersatileData {
             ColumnNameLeafNode leafNode = (ColumnNameLeafNode)object;
             String value = row[metadata.indexOfColumnName(leafNode.getName())];
 
+            Optional<Double> dval = Utility.safeParse(value);
+
             if (value == null || value.trim().isEmpty()) {
                 this.type = VersatileDataType.NULL;
+            } else if (dval.isPresent()) {
+                this.type = VersatileDataType.DOUBLE;
+                this.doubleValue = dval.get();
             } else {
                 this.type = VersatileDataType.STRING;
                 this.strValue = value;
