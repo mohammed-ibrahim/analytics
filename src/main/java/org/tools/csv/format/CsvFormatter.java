@@ -31,7 +31,7 @@ public class CsvFormatter {
             List<String> columnNamesList = Arrays.asList(columnNamesArray);
             csvColumnAnalyzer.compile(format.getRawColumns(), columnNamesList);
 
-             ProcessMetadata metadata = new ProcessMetadata()
+            ProcessMetadata metadata = new ProcessMetadata()
                     .withReturnColumnIndexes(csvColumnAnalyzer.getColumnIndexes())
                     .withColumnNames(columnNamesList);
 

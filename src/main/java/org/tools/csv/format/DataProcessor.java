@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.nio.file.Path;
 
 import org.tools.csv.format.entity.ConsolePrinter;
+import org.tools.csv.format.entity.FilePrinter;
 import org.tools.csv.format.entity.Format;
 import org.tools.csv.format.entity.Printer;
 import org.tools.csv.format.entity.ProcessMetadata;
@@ -36,14 +37,8 @@ public class DataProcessor {
             printer.nextLine(outputArray);
 
             while ((line = reader.readNext()) != null) {
-                //TODO: process data here
-                //1: If matcher.matches then #2 else continue.
-                //2: Copy required columns from inputfile to outputArray
-                //3: Send the array to printer
 
                 if (expressionEvaluator.evaluate(line)) {
-
-                    Integer index = 0;
 
                     for (int i=0; i<metadata.getReturnColumnIndexes().size(); i++) {
                         outputArray[i] = line[metadata.getReturnColumnIndexes().get(i)];
@@ -61,6 +56,12 @@ public class DataProcessor {
 
     private Printer getPrinter(Path outputFile) {
 
-        return new ConsolePrinter();
+        if (outputFile == null) {
+
+            return new ConsolePrinter();
+        } else {
+
+            return new FilePrinter(outputFile);
+        }
     }
 }

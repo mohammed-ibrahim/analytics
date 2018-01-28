@@ -1,6 +1,6 @@
 package org.tools.csv.format.entity;
 
-import java.util.Arrays;
+import org.apache.commons.lang3.StringUtils;
 
 public class ConsolePrinter implements Printer {
 
@@ -13,8 +13,7 @@ public class ConsolePrinter implements Printer {
     @Override
     public void nextLine(String[] line) {
 
-        Arrays.asList(line).forEach(a -> System.out.print(a + ","));
-        System.out.println("");
+        System.out.println(StringUtils.join(line, ","));
     }
 
 }
