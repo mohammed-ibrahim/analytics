@@ -7,7 +7,6 @@ public class ConsolePrinter implements Printer {
     @Override
     public void close() throws Exception {
 
-        System.out.println("Done printing...");
     }
 
     @Override

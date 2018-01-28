@@ -9,6 +9,7 @@ import org.tools.csv.format.entity.Format;
 import org.tools.csv.format.entity.Printer;
 import org.tools.csv.format.entity.ProcessMetadata;
 import org.tools.csv.format.expr.ExpressionEvaluator;
+import org.tools.csv.utils.Timer;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -28,17 +29,26 @@ public class DataProcessor {
                 Printer printer = getPrinter(outputFile)) {
 
             String[] line = null;
-
-            //print the headers
-            line = reader.readNext();
-            for (int i=0; i<metadata.getReturnColumnIndexes().size(); i++) {
-                outputArray[i] = line[metadata.getReturnColumnIndexes().get(i)];
-            }
-            printer.nextLine(outputArray);
+            Boolean headersPrinted = Boolean.FALSE;
+            Long numResults = 0L;
+            Timer timer = new Timer();
 
             while ((line = reader.readNext()) != null) {
 
                 if (expressionEvaluator.evaluate(line)) {
+
+                    numResults++;
+
+                    if (!headersPrinted) {
+
+                        line = reader.readNext();
+                        for (int i=0; i<metadata.getReturnColumnIndexes().size(); i++) {
+                            outputArray[i] = line[metadata.getReturnColumnIndexes().get(i)];
+                        }
+                        printer.nextLine(outputArray);
+
+                        headersPrinted = true;
+                    }
 
                     for (int i=0; i<metadata.getReturnColumnIndexes().size(); i++) {
                         outputArray[i] = line[metadata.getReturnColumnIndexes().get(i)];
@@ -47,6 +57,9 @@ public class DataProcessor {
                     printer.nextLine(outputArray);
                 }
             }
+
+            String info = String.format("Rows: %d Time-taken: %s", numResults, timer.end().toString());
+            System.out.println(info);
 
         } catch (Exception e) {
 
