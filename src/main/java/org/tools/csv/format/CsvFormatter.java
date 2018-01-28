@@ -66,8 +66,8 @@ public class CsvFormatter {
         ParseTree tree = selectParser.parse();
         Analyzer analyzer = new Analyzer();
         Format format = (Format)analyzer.visit(tree);
-        ObjectMapper jsonMapper = new ObjectMapper();
-        System.out.println(jsonMapper.writeValueAsString(format));
+        //ObjectMapper jsonMapper = new ObjectMapper();
+        //System.out.println(jsonMapper.writeValueAsString(format));
         return format;
     }
 }

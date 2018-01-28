@@ -28,8 +28,12 @@ public class DataProcessor {
 
             String[] line = null;
 
-            //omit the header
+            //print the headers
             line = reader.readNext();
+            for (int i=0; i<metadata.getReturnColumnIndexes().size(); i++) {
+                outputArray[i] = line[metadata.getReturnColumnIndexes().get(i)];
+            }
+            printer.nextLine(outputArray);
 
             while ((line = reader.readNext()) != null) {
                 //TODO: process data here
