@@ -52,6 +52,7 @@ public class VersatileData {
             this.boolValue = (Boolean)object;
         } else if (object instanceof List) {
 
+            this.type = VersatileDataType.LIST;
             this.listValue = (List)object;
         } else if (object instanceof ColumnNameLeafNode) {
 

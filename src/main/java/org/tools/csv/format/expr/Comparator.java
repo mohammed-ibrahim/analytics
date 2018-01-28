@@ -65,7 +65,16 @@ public class Comparator {
 
     private Boolean handleIn(VersatileData lhsData, VersatileData rhsData) {
 
-        return rhsData.getListValue().contains(lhsData.getObject());
+        if (lhsData.getType().equals(VersatileDataType.STRING)) {
+
+            return rhsData.getListValue().contains(lhsData.getStrValue());
+        } else if (lhsData.getType().equals(VersatileDataType.DOUBLE)) {
+
+            return rhsData.getListValue().contains(lhsData.getDoubleValue());
+        }
+
+        log.error("Not supposed to come to this place, but somehow missed!!");
+        return Boolean.FALSE;
     }
 
     private Boolean handleNotEquals(VersatileData lhsData, VersatileData rhsData) {
@@ -122,13 +131,13 @@ public class Comparator {
             case EQ:
             case IN:
                 if (lhsData.getType().equals(VersatileDataType.DOUBLE)
-                        && rhsData.getType().equals(VersatileDataType.DOUBLE)) {
+                        && rhsData.getType().equals(VersatileDataType.LIST)) {
 
                     return Boolean.TRUE;
                 }
 
                 if (lhsData.getType().equals(VersatileDataType.STRING)
-                        && rhsData.getType().equals(VersatileDataType.STRING)) {
+                        && rhsData.getType().equals(VersatileDataType.LIST)) {
 
                     return Boolean.TRUE;
                 }

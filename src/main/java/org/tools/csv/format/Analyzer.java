@@ -202,169 +202,30 @@ public class Analyzer extends SelectBaseVisitor<Object> {
                 .withLhs(visit(ctx.left))
                 .withRhs(visit(ctx.right));
     }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    //@Override public Object visitComparator(SelectParser.ComparatorContext ctx) { return visitChildren(ctx); }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    //@Override public Object visitBinary(SelectParser.BinaryContext ctx) { return visitChildren(ctx); }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    //@Override public Object visitBool(SelectParser.BoolContext ctx) { return visitChildren(ctx); }
-    /*
-    @Override
-    public Object visitQueryExpression(SelectParser.QueryExpressionContext ctx) {
-        System.out.println("visitQueryExpression");
-        Format fmt = new Format();
-
-        fmt.setRawColumns((List<String>)visitChildren(ctx.select_list()));
-
-        fmt.setNode((Node)visitChildren(ctx.filter_expr()));
-
-        return fmt;
-    }
-
-    @Override public Object visitSelectList(SelectParser.SelectListContext ctx) {
-        System.out.println("visitSelectList");
-        List<String> rawSelectItems = ctx.select_element()
-            .stream()
-            .map(i -> i.getText())
-            .collect(Collectors.toList());
-
-        return rawSelectItems;
-    }
-
-    @Override public Object visitSelectElement(SelectParser.SelectElementContext ctx) { return visitChildren(ctx); }
 
     @Override
-    public Object visitOrFilterExpr(SelectParser.OrFilterExprContext ctx) {
-        System.out.println("visitOrFilterExpr");
-        Node node = new Node();
-        node.setOp(NodeType.OR);
+    public Object visitInExpression(SelectParser.InExpressionContext ctx) {
 
-        node.setLhs((Node)visitChildren(ctx.filter_expr(0)));
-        node.setRhs((Node)visitChildren(ctx.filter_expr(1)));
-
-        return node;
-    }
-    @Override
-    public Object visitParenExpr(SelectParser.ParenExprContext ctx) {
-        System.out.println("visitParenExpr");
-        return visitChildren(ctx.filter_expr());
+        return new Node()
+                .withOp(NodeType.IN)
+                .withLhs(visit(ctx.left))
+                .withRhs(visit(ctx.right));
     }
 
     @Override
-    public Object visitSimpleFilter(SelectParser.SimpleFilterContext ctx) {
-        System.out.println("visitSimpleFilter");
-        Object obj = visitChildren(ctx.filter());
-        return obj;
+    public Object visitSliteralList(SelectParser.SliteralListContext ctx) {
+
+        return ctx.SLITERAL().stream()
+                .map(a -> stripQuotes(a.getText()))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Object visitAndFilterExpr(SelectParser.AndFilterExprContext ctx) {
-        System.out.println("visitAndFilterExpr");
-        Node node = new Node();
-        node.setOp(NodeType.AND);
+    public Object visitDecimalList(SelectParser.DecimalListContext ctx) {
 
-        node.setLhs((Node)visitChildren(ctx.filter_expr(0)));
-        node.setRhs((Node)visitChildren(ctx.filter_expr(1)));
-
-        return node;
-    }
-
-    @Override
-    public Object visitBasicFilter(SelectParser.BasicFilterContext ctx) {
-        System.out.println("visitBasicFilter");
-        Node node = new Node();
-        node.setOp(NodeType.fromString(ctx.OP().getText()));
-
-        String l1 = ctx.literal(0).getText();
-        String l2 = ctx.literal(1).getText();
-
-        Object o1 = visitChildren(ctx.literal(0));
-        Object o2 = visitChildren(ctx.literal(1));
-
-        node.setLhsLeaf((LeafNode)visitChildren(ctx.literal(0)));
-        node.setRhsLeaf((LeafNode)visitChildren(ctx.literal(1)));
-
-        return node;
-    }
-    @Override
-    public Object visitInopFilter(SelectParser.InopFilterContext ctx) {
-        System.out.println("visitInopFilter");
-        Node node = new Node();
-        node.setOp(NodeType.IN);
-
-        node.setLhsLeaf(new ColumnNameLeafNode(ctx.COL_NAME().getText()));
-        node.setRhsLeaf((LeafNode)visitChildren(ctx.literal_list()));
-
-        return node;
-    }
-
-    @Override
-    public Object visitLikeFilter(SelectParser.LikeFilterContext ctx) {
-        System.out.println("visitLikeFilter");
-        Node node = new Node();
-        node.setOp(NodeType.LIKE);
-
-        node.setLhsLeaf(new ColumnNameLeafNode(ctx.COL_NAME().getText()));
-        node.setRhsLeaf(new LiteralLeafNode(ctx.WORD().getText()));
-        return node;
-    }
-    @Override
-    public Object visitStringLiteral(SelectParser.StringLiteralContext ctx) {
-        System.out.println("visitStringLiteral");
-        return new StringLiteralLeafNode(ctx.getText());
-    }
-    @Override
-    public Object visitIntLiteral(SelectParser.IntLiteralContext ctx) {
-        System.out.println("visitIntLiteral");
-
-        return new IntegerLeafNode(Integer.parseInt(ctx.getText()));
-    }
-    @Override
-    public Object visitFloatLiteral(SelectParser.FloatLiteralContext ctx) {
-        System.out.println("visitFloatLiteral");
-        return new FloatLeafNode(Double.parseDouble(ctx.getText()));
-    }
-    @Override
-    public Object visitBoolLiteral(SelectParser.BoolLiteralContext ctx) {
-        System.out.println("visitBoolLiteral");
-        if (ctx.getText().toLowerCase().equals("true")) {
-            return new BooleanLeafNode(new Boolean(true));
-        }
-
-        return new BooleanLeafNode(new Boolean(false));
-    }
-    @Override
-    public Object visitLiteralColName(SelectParser.LiteralColNameContext ctx) {
-        System.out.println("visitLiteralColName");
-
-        return new ColumnNameLeafNode(ctx.getText());
-    }
-    @Override
-    public Object visitLiteralListExpr(SelectParser.LiteralListExprContext ctx) {
-        System.out.println("visitLiteralListExpr");
-
-        List<String> literalList = ctx.SLITERAL()
-                .stream()
-                .map(a -> a.getText())
+        return ctx.DECIMAL().stream()
+                .map(a -> Double.parseDouble(a.getText()))
                 .collect(Collectors.toList());
 
-
-        return new LiteralListLeafNode(literalList);
     }
-    */
 }
