@@ -47,6 +47,7 @@ public class Analyzer extends SelectBaseVisitor<Object> {
             Node node = new Node();
             node.setOp(NodeType.OR);
 
+            Object o = visit(ctx.left);
             node.setLhs((Node)visit(ctx.left));
             node.setRhs((Node)visit(ctx.right));
 
@@ -197,19 +198,24 @@ public class Analyzer extends SelectBaseVisitor<Object> {
     @Override
     public Object visitLikeExpression(SelectParser.LikeExpressionContext ctx) {
 
+        ColumnNameLeafNode cln = new ColumnNameLeafNode(ctx.IDENTIFIER().getText());
+        String sliteral = stripQuotes(ctx.SLITERAL().getText());
+
         return new Node()
                 .withOp(NodeType.LIKE)
-                .withLhs(visit(ctx.left))
-                .withRhs(visit(ctx.right));
+                .withLhs(cln)
+                .withRhs(sliteral);
     }
 
     @Override
     public Object visitInExpression(SelectParser.InExpressionContext ctx) {
 
+        ColumnNameLeafNode cln = new ColumnNameLeafNode(ctx.IDENTIFIER().getText());
+
         return new Node()
                 .withOp(NodeType.IN)
-                .withLhs(visit(ctx.left))
-                .withRhs(visit(ctx.right));
+                .withLhs(cln)
+                .withRhs(visit(ctx.obj_list()));
     }
 
     @Override

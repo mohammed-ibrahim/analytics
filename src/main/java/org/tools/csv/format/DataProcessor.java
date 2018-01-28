@@ -28,7 +28,8 @@ public class DataProcessor {
         try (CSVReader reader = new CSVReader(new FileReader(inputFile.toFile()));
                 Printer printer = getPrinter(outputFile)) {
 
-            String[] line = null;
+            String[] line = reader.readNext();
+            String[] headers = line;
             Boolean headersPrinted = Boolean.FALSE;
             Long numResults = 0L;
             Timer timer = new Timer();
@@ -41,9 +42,8 @@ public class DataProcessor {
 
                     if (!headersPrinted) {
 
-                        line = reader.readNext();
                         for (int i=0; i<metadata.getReturnColumnIndexes().size(); i++) {
-                            outputArray[i] = line[metadata.getReturnColumnIndexes().get(i)];
+                            outputArray[i] = headers[metadata.getReturnColumnIndexes().get(i)];
                         }
                         printer.nextLine(outputArray);
 

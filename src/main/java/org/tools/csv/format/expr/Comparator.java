@@ -129,6 +129,20 @@ public class Comparator {
                 }
 
             case EQ:
+                if (lhsData.getType().equals(VersatileDataType.DOUBLE)
+                        && rhsData.getType().equals(VersatileDataType.DOUBLE)) {
+
+                    return Boolean.TRUE;
+                }
+
+                if (lhsData.getType().equals(VersatileDataType.STRING)
+                        && rhsData.getType().equals(VersatileDataType.STRING)) {
+
+                    return Boolean.TRUE;
+                }
+
+                return Boolean.FALSE;
+
             case IN:
                 if (lhsData.getType().equals(VersatileDataType.DOUBLE)
                         && rhsData.getType().equals(VersatileDataType.LIST)) {

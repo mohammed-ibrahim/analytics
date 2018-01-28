@@ -38,19 +38,19 @@ public interface SelectVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBinaryExpression(SelectParser.BinaryExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code decimalExpression}
-	 * labeled alternative in {@link SelectParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDecimalExpression(SelectParser.DecimalExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code inExpression}
 	 * labeled alternative in {@link SelectParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitInExpression(SelectParser.InExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code decimalExpression}
+	 * labeled alternative in {@link SelectParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDecimalExpression(SelectParser.DecimalExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code boolExpression}
 	 * labeled alternative in {@link SelectParser#expression}.
@@ -95,14 +95,14 @@ public interface SelectVisitor<T> extends ParseTreeVisitor<T> {
 	T visitComparatorExpression(SelectParser.ComparatorExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code sliteralList}
-	 * labeled alternative in {@link SelectParser#ojb_list}.
+	 * labeled alternative in {@link SelectParser#obj_list}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitSliteralList(SelectParser.SliteralListContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code decimalList}
-	 * labeled alternative in {@link SelectParser#ojb_list}.
+	 * labeled alternative in {@link SelectParser#obj_list}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */

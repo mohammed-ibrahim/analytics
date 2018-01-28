@@ -46,6 +46,10 @@ public class ExpressionEvaluator {
 
                 return inev(lhs, row) || inev(rhs, row);
 
+            case PARENTHESES:
+                lhs = assertNode(node.getLhs());
+                return inev(lhs, row);
+
             case EQ:
             case GT:
             case GE:

@@ -13,15 +13,15 @@ expression
  | NOT expression                                 #notExpression
  | left=expression op=comparator right=expression #comparatorExpression
  | left=expression op=binary right=expression     #binaryExpression
- | left=expression LIKE right=expression          #likeExpression
- | left=expression IN right=ojb_list              #inExpression
+ | IDENTIFIER LIKE SLITERAL                       #likeExpression
+ | IDENTIFIER IN obj_list                         #inExpression
  | bool                                           #boolExpression
  | IDENTIFIER                                     #identifierExpression
  | DECIMAL                                        #decimalExpression
  | SLITERAL                                       #sliteralExpression
  ;
 
-ojb_list
+obj_list
  : LPAREN SLITERAL (',' SLITERAL)* RPAREN         #sliteralList
  | LPAREN DECIMAL (',' DECIMAL)* RPAREN           #decimalList
  ;
