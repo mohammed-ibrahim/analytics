@@ -193,6 +193,15 @@ public class Analyzer extends SelectBaseVisitor<Object> {
         }
         throw new RuntimeException("not implemented: comparator operator " + ctx.op.getText());
     }
+
+    @Override
+    public Object visitLikeExpression(SelectParser.LikeExpressionContext ctx) {
+
+        return new Node()
+                .withOp(NodeType.LIKE)
+                .withLhs(visit(ctx.left))
+                .withRhs(visit(ctx.right));
+    }
     /**
      * {@inheritDoc}
      *

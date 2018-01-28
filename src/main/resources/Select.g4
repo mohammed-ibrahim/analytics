@@ -13,6 +13,7 @@ expression
  | NOT expression                                 #notExpression
  | left=expression op=comparator right=expression #comparatorExpression
  | left=expression op=binary right=expression     #binaryExpression
+ | left=expression LIKE right=expression          #likeExpression
  | bool                                           #boolExpression
  | IDENTIFIER                                     #identifierExpression
  | DECIMAL                                        #decimalExpression
@@ -31,11 +32,12 @@ bool
  : TRUE | FALSE
  ;
 
-AND        : A N D ;
-OR         : O R  ;
+AND        : A N D;
+OR         : O R;
 NOT        : N O T;
 TRUE       : T R U E ;
 FALSE      : F A L S E ;
+LIKE       : L I K E;
 GT         : '>' ;
 GE         : '>=' ;
 LT         : '<' ;
