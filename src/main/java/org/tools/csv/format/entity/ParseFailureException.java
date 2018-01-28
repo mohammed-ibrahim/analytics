@@ -15,11 +15,6 @@ public class ParseFailureException extends RuntimeException {
         this.line = line;
         this.charPositionInLine = charPositionInLine;
         this.offendingToken = offendingToken;
-
-        System.out.println(sourceName);
-        System.out.println(line);
-        System.out.println(charPositionInLine);
-        System.out.println(offendingToken);
     }
 
     @Getter

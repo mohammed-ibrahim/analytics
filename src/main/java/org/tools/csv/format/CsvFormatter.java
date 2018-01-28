@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.tools.csv.format.entity.DescriptiveErrorListener;
 import org.tools.csv.format.entity.Format;
+import org.tools.csv.format.entity.ParseFailureException;
 import org.tools.csv.format.entity.ProcessMetadata;
 import org.tools.csv.format.grammar.SelectLexer;
 import org.tools.csv.format.grammar.SelectParser;
@@ -42,11 +43,32 @@ public class CsvFormatter {
                     format,
                     metadata);
 
+        } catch (ParseFailureException pfe) {
+
+            System.out.println(getPfeMessage(pfe));
         } catch (Exception e) {
 
             System.out.print(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private static String getPfeMessage(ParseFailureException pfe) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Error in syntax, please refer to manual.\n");
+        if (pfe.getSourceName() != null) {
+            sb.append(" Source: " + pfe.getSourceName());
+        }
+
+        if (pfe.getOffendingToken() != null) {
+            sb.append(" Around: " + pfe.getOffendingToken());
+        }
+
+        sb.append(" Line: " + pfe.getLine());
+        sb.append(" Pos: " + pfe.getCharPositionInLine());
+
+        return sb.toString();
     }
 
     public Format parseExpression(String expression) throws Exception {
