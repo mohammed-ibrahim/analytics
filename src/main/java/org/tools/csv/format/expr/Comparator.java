@@ -67,7 +67,7 @@ public class Comparator {
 
         if (lhsData.getType().equals(VersatileDataType.STRING)) {
 
-            return rhsData.getListValue().contains(lhsData.getStrValue());
+            return rhsData.getListValue().contains(lhsData.getStrValue().toLowerCase());
         } else if (lhsData.getType().equals(VersatileDataType.DOUBLE)) {
 
             return rhsData.getListValue().contains(lhsData.getDoubleValue());

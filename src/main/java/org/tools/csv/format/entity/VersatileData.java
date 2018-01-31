@@ -96,7 +96,7 @@ public class VersatileData {
                 return this.doubleValue.equals(other.getDoubleValue());
 
             case STRING:
-                return this.strValue.equals(other.getStrValue());
+                return this.strValue.toLowerCase().equals(other.getStrValue().toLowerCase());
 
             default:
                 throw new RuntimeException(this.type.toString() + " comparisiont to: " + other.getType().toString()  + " is not handeled.");

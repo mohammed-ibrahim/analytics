@@ -199,7 +199,7 @@ public class Analyzer extends SelectBaseVisitor<Object> {
     public Object visitLikeExpression(SelectParser.LikeExpressionContext ctx) {
 
         ColumnNameLeafNode cln = new ColumnNameLeafNode(ctx.IDENTIFIER().getText());
-        String sliteral = stripQuotes(ctx.SLITERAL().getText());
+        String sliteral = stripQuotes(ctx.SLITERAL().getText().toLowerCase());
 
         return new Node()
                 .withOp(NodeType.LIKE)
@@ -222,7 +222,7 @@ public class Analyzer extends SelectBaseVisitor<Object> {
     public Object visitSliteralList(SelectParser.SliteralListContext ctx) {
 
         return ctx.SLITERAL().stream()
-                .map(a -> stripQuotes(a.getText()))
+                .map(a -> stripQuotes(a.getText().toLowerCase()))
                 .collect(Collectors.toList());
     }
 
