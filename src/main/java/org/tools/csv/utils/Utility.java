@@ -2,6 +2,7 @@ package org.tools.csv.utils;
 
 import java.io.FileReader;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Random;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -34,5 +35,28 @@ public class Utility {
 
     public static boolean isNumeric(String s) {
         return s != null && s.matches("[-+]?\\d*\\.?\\d+");
+    }
+
+    public static boolean isNullOrEmpty(String s) {
+        if (s == null) {
+            return true;
+        }
+
+        if (s.trim().isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static Optional<Double> safeParse(String input) {
+        try {
+
+            Double dbl = Double.parseDouble(input);
+            return Optional.of(dbl);
+        } catch (Exception e) {
+
+            return Optional.empty();
+        }
     }
 }
