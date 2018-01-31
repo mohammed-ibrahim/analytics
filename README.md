@@ -45,6 +45,7 @@ Process large csv files
 `java -cp build/libs/csort.jar org.tools.csv.sort.CsvMergeSorter --help`
 
 ## Note:
+- For now sorting and formatting are seperated and cannot be combined into single operation.
 - Please ensure that there is free diskspace on target machine at-least thrice the size of file.
   i.e. if the file to sort is of size 1gb there must be atleast 3gb free space on disk.
 - Csv without column names can be sorted by using option c, please provide option `-m no` in such case.
