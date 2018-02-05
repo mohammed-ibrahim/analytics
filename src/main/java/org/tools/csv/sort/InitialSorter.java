@@ -31,8 +31,7 @@ public class InitialSorter {
 
     public List<File> sortIndividualFiles(
             List<File> files,
-            CsvSortSettings csvSortSettings,
-            Boolean deleteSourceFiles) throws Exception {
+            CsvSortSettings csvSortSettings) throws Exception {
 
         this.hasFailed = false;
         this.iterator = files.iterator();
@@ -41,11 +40,15 @@ public class InitialSorter {
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
 
         for (int i = 0; i < NUM_THREADS; i++) {
-            executorService.submit(new SortDelegator(csvSortSettings, deleteSourceFiles));
+            executorService.submit(new SortDelegator(csvSortSettings));
         }
 
         executorService.shutdown();
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
+
+        if (this.hasFailed) {
+            throw new RuntimeException("Sorting of csv failed. Please check logs");
+        }
 
         return this.sortedFiles;
     }
@@ -74,8 +77,6 @@ public class InitialSorter {
 
         private CsvSortSettings csvSortSettings;
 
-        private Boolean deleteSourceFile;
-
         @Override
         public void run() {
             try {
@@ -103,14 +104,17 @@ public class InitialSorter {
 
             CsvSortSettings auxSettings = new CsvSortSettings();
             auxSettings.setSortColumnOrder(this.csvSortSettings.getSortColumnOrder());
+            auxSettings.setIsDescendingOrder(this.csvSortSettings.getIsDescendingOrder());
             //Initial sorter doesn't have any column names.
             auxSettings.setHasColumnNames(false);
 
             CsvBlockSorter csvBlockSorter = new CsvBlockSorter();
             csvBlockSorter.sort(sourcePath,
                     destinationPath,
-                    auxSettings,
-                    this.deleteSourceFile);
+                    auxSettings);
+
+            //Delete the split-part of original file.
+            fileToBlockSort.delete();
 
             return destinationPath.toFile();
         }

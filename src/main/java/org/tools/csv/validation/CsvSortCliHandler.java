@@ -9,12 +9,10 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.tools.csv.entity.CsvSortSettings;
 import org.tools.csv.utils.Utility;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -26,7 +24,7 @@ public class CsvSortCliHandler {
 
     private CsvSortSettings csvSortSettings;
 
-    private Boolean deleteSourceFile = null;
+    //private Boolean deleteSourceFile = null;
 
     private Path tempDumpDirectory = null;
 
@@ -40,7 +38,7 @@ public class CsvSortCliHandler {
         OptionDetails cis = new OptionDetails("column-indexes", "c", "comma seperated column-indexes, 0 -> first column, 1 -> second columns, 2 -> third column...", true, false);
         OptionDetails cns = new OptionDetails("column-names", "n", "comma seperated column-names, cannot be used with -c option", true, false);
         OptionDetails hcn = new OptionDetails("has-column-names", "m", "whether given input csv has column names? possbile values: y,n,yes,no", true, true);
-        OptionDetails sf = new OptionDetails("save-intermediate-files", "s", "whether to save intermediate files", false, false);
+        //OptionDetails sf = new OptionDetails("save-intermediate-files", "s", "whether to save intermediate files", false, false);
         OptionDetails dd = new OptionDetails("dump-directory", "d", "directory where to dump intermeidate files.", true, false);
         OptionDetails desc = new OptionDetails("descending", "x", "sort in descending order.", false, false);
         OptionDetails help = new OptionDetails("help", "h", "show help.", false, false);
@@ -48,7 +46,7 @@ public class CsvSortCliHandler {
         options.addOption(io.getOption());
         options.addOption(oo.getOption());
         options.addOption(cis.getOption());
-        options.addOption(sf.getOption());
+        //options.addOption(sf.getOption());
         options.addOption(hcn.getOption());
         options.addOption(dd.getOption());
         options.addOption(cns.getOption());
@@ -116,11 +114,11 @@ public class CsvSortCliHandler {
             this.csvSortSettings.setIsDescendingOrder(false);
         }
 
-        if (sf.isPresent(cli)) {
-            this.deleteSourceFile = false;
-        } else {
-            this.deleteSourceFile = true;
-        }
+//        if (sf.isPresent(cli)) {
+//            this.deleteSourceFile = false;
+//        } else {
+//            this.deleteSourceFile = true;
+//        }
 
         if (dd.isPresent(cli)) {
             this.tempDumpDirectory = Paths.get(dd.getOptionValue(cli));

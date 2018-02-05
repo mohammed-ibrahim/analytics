@@ -16,13 +16,13 @@ Process large csv files
 
 
 ## 1. Sort on city,country
-`java -cp build/libs/csort.jar org.tools.csv.sort.CsvMergeSorter -n city,country -i employee-details.csv -o city-sorted.csv -m yes -s`
+`java -cp build/libs/csort.jar org.tools.csv.sort.CsvMergeSorter -n city,country -i employee-details.csv -o city-sorted.csv -m yes`
 
 ![City,Country Sorted](etc/images/city-country-sorted.png)
 
 
 ## 2. Sort on first_name
-`java -cp build/libs/csort.jar org.tools.csv.sort.CsvMergeSorter -n first_name -i employee-details.csv -o first-name-sorted.csv -m yes -s`
+`java -cp build/libs/csort.jar org.tools.csv.sort.CsvMergeSorter -n first_name -i employee-details.csv -o first-name-sorted.csv -m yes`
 
 ![first_name Sorted](etc/images/first-name-sorted.png)
 

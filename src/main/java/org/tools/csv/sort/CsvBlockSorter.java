@@ -25,8 +25,7 @@ public class CsvBlockSorter {
     public OperationStatus sort(
             Path inputFilePath,
             Path outputFilePath,
-            CsvSortSettings csvSortSettings,
-            Boolean deleteSourceFile) throws Exception {
+            CsvSortSettings csvSortSettings) throws Exception {
 
         //10mb csv file takes ~/350mb ram
         //50mb csv file takes ~/870mb ram
@@ -81,10 +80,6 @@ public class CsvBlockSorter {
             return OperationStatus.failure();
         }
 
-        if (deleteSourceFile) {
-            inputFilePath.toFile().delete();
-        }
-
         log.info("Status: {}, Time-taken: {}, file-size: {} mb", status, timer.end().toString(), fileSize);
 
         return OperationStatus.success();
@@ -105,6 +100,6 @@ public class CsvBlockSorter {
             csvSortSettings.getSortColumnOrder().add(Integer.parseInt(columIndex));
         }
 
-        csvBlockSorter.sort(Paths.get(args[0]), Paths.get(args[1]), csvSortSettings, false);
+        csvBlockSorter.sort(Paths.get(args[0]), Paths.get(args[1]), csvSortSettings);
     }
 }
