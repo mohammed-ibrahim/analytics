@@ -31,8 +31,7 @@ public class InitialSorter {
 
     public List<File> sortIndividualFiles(
             List<File> files,
-            CsvSortSettings csvSortSettings,
-            Boolean deleteSourceFiles) throws Exception {
+            CsvSortSettings csvSortSettings) throws Exception {
 
         this.hasFailed = false;
         this.iterator = files.iterator();
@@ -41,7 +40,7 @@ public class InitialSorter {
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
 
         for (int i = 0; i < NUM_THREADS; i++) {
-            executorService.submit(new SortDelegator(csvSortSettings, deleteSourceFiles));
+            executorService.submit(new SortDelegator(csvSortSettings));
         }
 
         executorService.shutdown();
@@ -73,8 +72,6 @@ public class InitialSorter {
     private class SortDelegator implements Runnable {
 
         private CsvSortSettings csvSortSettings;
-
-        private Boolean deleteSourceFile;
 
         @Override
         public void run() {
@@ -109,8 +106,10 @@ public class InitialSorter {
             CsvBlockSorter csvBlockSorter = new CsvBlockSorter();
             csvBlockSorter.sort(sourcePath,
                     destinationPath,
-                    auxSettings,
-                    this.deleteSourceFile);
+                    auxSettings);
+
+            //Delete the split-part of original file.
+            fileToBlockSort.delete();
 
             return destinationPath.toFile();
         }

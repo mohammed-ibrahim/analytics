@@ -31,14 +31,13 @@ public class CsvMerger {
             List<File> files,
             Path outputFilePath,
             String[] columnNames,
-            CsvSortSettings csvSortSettings,
-            Boolean deleteSourceFile) throws Exception {
+            CsvSortSettings csvSortSettings) throws Exception {
 
         List<File> filesToMergeSort = files;
         Integer iterationNumber = 1;
 
         while (filesToMergeSort.size() > 1) {
-            filesToMergeSort = serialMerge(filesToMergeSort, iterationNumber, csvSortSettings, deleteSourceFile);
+            filesToMergeSort = serialMerge(filesToMergeSort, iterationNumber, csvSortSettings);
             iterationNumber = iterationNumber + 1;
         }
 
@@ -59,10 +58,7 @@ public class CsvMerger {
             writer.close();
             new FileAppender().append(sortedFile.toPath(), outputFilePath);
 
-            //delete the tmp sort file after merging..
-            if (deleteSourceFile) {
-                sortedFile.delete();
-            }
+            sortedFile.delete();
         } else {
 
             sortedFile.renameTo(outputFilePath.toFile());
@@ -80,8 +76,7 @@ public class CsvMerger {
     private List<File> serialMerge(
             List<File> filesToMergeSort,
             Integer iterationNumber,
-            CsvSortSettings csvSortSettings,
-            Boolean deleteSourceFile) throws Exception {
+            CsvSortSettings csvSortSettings) throws Exception {
 
         this.submittedFiles = new ArrayList<File>();
         this.mergeNumber = 1;
@@ -97,7 +92,7 @@ public class CsvMerger {
         ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
 
         for (int i = 0; i < NUM_THREADS; i++) {
-            executorService.submit(new MergeSortDelegator(csvSortSettings, deleteSourceFile, iterationNumber));
+            executorService.submit(new MergeSortDelegator(csvSortSettings, iterationNumber));
         }
 
         executorService.shutdown();
@@ -107,7 +102,7 @@ public class CsvMerger {
             File lastFile = this.submittedFiles.remove(this.submittedFiles.size() - 1);
             String mergedFileName = Paths.get(lastFile.toPath().getParent().toString(), "residual-merge-" + String.format("%07d", iterationNumber)).toString();
             SimpleCsvMergeSort simpleCsvMergeSort = new SimpleCsvMergeSort();
-            simpleCsvMergeSort.mergeSortCsvFiles(lastFile.getAbsolutePath(), residual.getAbsolutePath(), mergedFileName, csvSortSettings, deleteSourceFile);
+            simpleCsvMergeSort.mergeSortCsvFiles(lastFile.getAbsolutePath(), residual.getAbsolutePath(), mergedFileName, csvSortSettings);
             this.submittedFiles.add(Paths.get(mergedFileName).toFile());
         }
 
@@ -142,8 +137,6 @@ public class CsvMerger {
 
         private CsvSortSettings csvSortSettings;
 
-        private Boolean deleteSourceFiles;
-
         private Integer iterationNumber;
 
         @Override
@@ -169,7 +162,7 @@ public class CsvMerger {
             Path pathc = Paths.get(filea.toPath().getParent().toString(), "merge-sort-level-" + String.format("%07d", this.iterationNumber) + "-mrno-" + String.format("%07d", mergeNumber));
             File filec = pathc.toFile();
             SimpleCsvMergeSort simpleCsvMergeSort = new SimpleCsvMergeSort();
-            simpleCsvMergeSort.mergeSortCsvFiles(filea.getAbsolutePath(), fileb.getAbsolutePath(), filec.getAbsolutePath(), this.csvSortSettings, this.deleteSourceFiles);
+            simpleCsvMergeSort.mergeSortCsvFiles(filea.getAbsolutePath(), fileb.getAbsolutePath(), filec.getAbsolutePath(), this.csvSortSettings);
             return filec;
         }
     }

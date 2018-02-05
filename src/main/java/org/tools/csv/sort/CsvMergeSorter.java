@@ -23,7 +23,6 @@ public class CsvMergeSorter {
             Path inputFilePath,
             Path outputFilePath,
             CsvSortSettings csvSortSettings,
-            Boolean deleteSourceFile,
             Path tempDumpDirectory) throws Exception {
 
         if (!inputFilePath.toFile().exists()) {
@@ -33,7 +32,7 @@ public class CsvMergeSorter {
         if (inputFilePath.toFile().length() <= StatUtils.getSafeBlockSize()) {
 
             CsvBlockSorter csvBlockSorter = new CsvBlockSorter();
-            return csvBlockSorter.sort(inputFilePath, outputFilePath, csvSortSettings, deleteSourceFile);
+            return csvBlockSorter.sort(inputFilePath, outputFilePath, csvSortSettings);
         }
 
         String tempDirectory = (tempDumpDirectory == null) ? System.getProperty("java.io.tmpdir") : tempDumpDirectory.toString();
@@ -43,8 +42,6 @@ public class CsvMergeSorter {
         if (!fileSortRootDir.toFile().exists()) {
             fileSortRootDir.toFile().mkdirs();
         }
-
-        //call splitter
 
         Path dropDirectory = Paths.get(fileSortRootDir.toString(), Constants.DROP_DIR_NAME);
 
@@ -64,16 +61,12 @@ public class CsvMergeSorter {
 
         log.info("Sorting....");
         InitialSorter initialSorter = new InitialSorter();
-        List<File> initialSortedFiles = initialSorter.sortIndividualFiles(files, csvSortSettings, deleteSourceFile);
+        List<File> initialSortedFiles = initialSorter.sortIndividualFiles(files, csvSortSettings);
         log.info("Total files sorted: {}", initialSortedFiles.size());
 
         log.info("Merging....");
         CsvMerger csvMerger = new CsvMerger();
-        csvMerger.merge(initialSortedFiles, outputFilePath, columnNames, csvSortSettings, deleteSourceFile);
-
-        if (deleteSourceFile) {
-            inputFilePath.toFile().delete();
-        }
+        csvMerger.merge(initialSortedFiles, outputFilePath, columnNames, csvSortSettings);
 
         return OperationStatus.success();
     }
@@ -89,7 +82,6 @@ public class CsvMergeSorter {
         csvMergeSorter.sort(csvSortCliHandler.getInputFilePath(),
                 csvSortCliHandler.getOutputFilePath(),
                 csvSortCliHandler.getCsvSortSettings(),
-                csvSortCliHandler.getDeleteSourceFile(),
                 csvSortCliHandler.getTempDumpDirectory());
     }
 }

@@ -20,8 +20,7 @@ public class SimpleCsvMergeSort {
             String filea,
             String fileb,
             String filec,
-            CsvSortSettings csvSortSettings,
-            Boolean deleteSourceFiles) throws Exception {
+            CsvSortSettings csvSortSettings) throws Exception {
 
         Path patha = Paths.get(filea);
         Path pathb = Paths.get(fileb);
@@ -78,10 +77,8 @@ public class SimpleCsvMergeSort {
             }
         }
 
-        if (deleteSourceFiles) {
-            patha.toFile().delete();
-            pathb.toFile().delete();
-        }
+        patha.toFile().delete();
+        pathb.toFile().delete();
 
         return OperationStatus.success();
     }
