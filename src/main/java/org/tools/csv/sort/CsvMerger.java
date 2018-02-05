@@ -98,6 +98,10 @@ public class CsvMerger {
         executorService.shutdown();
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
 
+        if (this.hasFailed) {
+            throw new RuntimeException("Failed to sort csv files, Please check logs.");
+        }
+
         if (residual != null) {
             File lastFile = this.submittedFiles.remove(this.submittedFiles.size() - 1);
             String mergedFileName = Paths.get(lastFile.toPath().getParent().toString(), "residual-merge-" + String.format("%07d", iterationNumber)).toString();

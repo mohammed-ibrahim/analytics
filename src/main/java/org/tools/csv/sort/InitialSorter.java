@@ -46,6 +46,10 @@ public class InitialSorter {
         executorService.shutdown();
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
 
+        if (this.hasFailed) {
+            throw new RuntimeException("Sorting of csv failed. Please check logs");
+        }
+
         return this.sortedFiles;
     }
 
