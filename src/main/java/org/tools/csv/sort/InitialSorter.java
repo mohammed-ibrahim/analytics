@@ -100,6 +100,7 @@ public class InitialSorter {
 
             CsvSortSettings auxSettings = new CsvSortSettings();
             auxSettings.setSortColumnOrder(this.csvSortSettings.getSortColumnOrder());
+            auxSettings.setIsDescendingOrder(this.csvSortSettings.getIsDescendingOrder());
             //Initial sorter doesn't have any column names.
             auxSettings.setHasColumnNames(false);
 
